@@ -3,7 +3,12 @@ server:
 
 spring:
   profiles:
-    include: local, oauth
+    include: local, oauth, aws
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 logging:
   config: classpath:logback/logback.xml
