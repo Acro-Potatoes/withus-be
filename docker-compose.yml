@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  redis:
+    container_name: redis_local
+    build:
+      dockerfile: Dockerfile
+      context: ./redis
+    image: redis
+    volumes:
+      - ./redis/config/redis.cnf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    restart: always
+  mysql:
+    container_name: mysql_local
+    build:
+      dockerfile: Dockerfile
+      context: ./database
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=withus
+      - MYSQL_ROOT_PASSWORD=1234
+    volumes:
+      - ./database/config:/etc/mysql/conf.d
+    ports:
+      - "3306:3306"
+
