@@ -1,6 +1,9 @@
+server:
+  port: 8080
+
 spring:
   profiles:
     include: local, oauth
 
 logging:
-  config: classpath:logback.xml
+  config: classpath:logback/logback.xml
