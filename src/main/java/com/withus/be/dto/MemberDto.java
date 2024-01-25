@@ -29,19 +29,28 @@ public class MemberDto {
 
         @NotNull
         @Size(min = 3, max = 50)
+        private String name;
+
         private String nickname;
+
+        private String profileImage;
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private Authority authority;
 
-        public static Member from(MemberRequest member, String password) {
-            if (member == null) return null;
+
+        public static Member from(MemberRequest memberRequest, String password) {
+            if (memberRequest == null) return null;
 
             return Member.builder()
-                    .email(member.getEmail())
+                    .email(memberRequest.getEmail())
                     .password(password)
-                    .nickname(member.getNickname())
-                    .profileImage("")   // TODO 있으면 넣고 없으면 기본 이미지 넣기
+                    .name(memberRequest.getName())
+                    .nickname(memberRequest.getNickname())
+                    .profileImage( // TODO 있으면 넣고 없으면 기본 이미지 넣기(S3에 default image 있음)
+                            memberRequest.getProfileImage() == null || memberRequest.getProfileImage().isEmpty()
+                                    ? "" : memberRequest.getProfileImage()
+                    )
                     .activated(true)
                     .authority(Authority.ROLE_USER)
                     .provider(Provider.DEFAULT)

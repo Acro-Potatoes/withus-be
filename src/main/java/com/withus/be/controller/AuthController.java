@@ -3,9 +3,12 @@ package com.withus.be.controller;
 import com.withus.be.common.auth.jwt.JwtFilter;
 import com.withus.be.common.auth.jwt.TokenProvider;
 import com.withus.be.dto.LoginDto;
+import com.withus.be.dto.MemberDto;
 import com.withus.be.dto.TokenDto;
 import com.withus.be.dto.TokenDto.TokenResponse;
+import com.withus.be.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +22,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
     private static final String HEADER_PREFIX = "Bearer ";
+    private final AuthService authService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
+    @PostMapping("/signup")
+    public ResponseEntity<MemberDto.MemberResponse> signup(@Valid @RequestBody MemberDto.MemberRequest memberRequest) {
+        return ResponseEntity.ok(authService.signup(memberRequest));
     }
 
     @PostMapping("/login")

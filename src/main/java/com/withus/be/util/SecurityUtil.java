@@ -17,7 +17,7 @@ public class SecurityUtil {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
-            log.debug("Security Context에 인증 정보가 없습니다.");
+            log.debug("There is no authentication information in the Security Context.");
             return Optional.empty();
         }
 
