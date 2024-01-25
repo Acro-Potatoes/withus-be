@@ -27,9 +27,8 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private static final String[] WHITE_LIST_URL = {
-            "/", "/**", "/auth/**", "/products", "/v2/api-docs",
-            "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/index.html",
-            "/webjars/**", "/swagger/**"
+            "/", "/**", "/v2/api-docs", "/swagger-resources/**",
+            "/swagger-ui.html", "/swagger-ui/index.html", "/webjars/**", "/swagger/**"
     };
 
     public SecurityConfig(
@@ -61,7 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .requestMatchers("/auth/login", "/api/signup").permitAll()
+                                .requestMatchers("/auth/login", "auth/google/**", "/auth/signup").permitAll()
                                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -80,3 +79,4 @@ public class SecurityConfig {
                 .build();
     }
 }
+

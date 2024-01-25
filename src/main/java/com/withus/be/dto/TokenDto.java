@@ -53,4 +53,8 @@ public class TokenDto {
                     .build();
         }
     }
+
+    public record OauthRefreshDto(String refreshToken) {
+    }
+
 }

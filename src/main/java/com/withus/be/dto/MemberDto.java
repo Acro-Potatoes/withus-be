@@ -56,6 +56,19 @@ public class MemberDto {
                     .provider(Provider.DEFAULT)
                     .build();
         }
+
+        public static Member from(String email, String name, String image, Provider provider) {
+            return Member.builder()
+                    .email(email)
+                    .password("") // social login 은 받아오는 값에 password 따로 없음.
+                    .name(name)
+                    .nickname("")
+                    .profileImage(image)
+                    .activated(true)
+                    .authority(Authority.ROLE_USER)
+                    .provider(provider)
+                    .build();
+        }
     }
 
     @Getter
