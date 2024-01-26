@@ -2,7 +2,7 @@ package com.withus.be.common.auth.oauth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.withus.be.common.auth.jwt.TokenProvider;
+import com.withus.be.common.auth.jwt.JwtTokenProvider;
 import com.withus.be.common.auth.oauth.dto.GoogleOAuthToken;
 import com.withus.be.common.auth.oauth.dto.GoogleUser;
 import com.withus.be.common.exception.UnknownProviderException;
@@ -26,7 +26,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class OAuthTokenService {
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final OAuthGoogleService oauthGoogleService;
@@ -56,8 +56,7 @@ public class OAuthTokenService {
      */
     private GoogleUser resObjDeserializeProc(String accessTokenResponse) throws JsonProcessingException {
         GoogleOAuthToken oAuthToken = oauthGoogleService.getAccessToken(accessTokenResponse);
-        String userInfoResponse = oauthGoogleService.requestUserInfo(oAuthToken);
-        return new ObjectMapper().readValue(userInfoResponse, GoogleUser.class);
+        return new ObjectMapper().readValue(oauthGoogleService.requestUserInfo(oAuthToken), GoogleUser.class);
     }
 
     public void providerValidCheck(Provider socialLoginType) {
@@ -69,7 +68,6 @@ public class OAuthTokenService {
 
     private void ifYouDntHvMmbSv(String email, GoogleUser googleUser) {
         if (memberRepository.findByEmail(email).isPresent()) return;
-
         memberRepository.save(MemberRequest.from(
                 email,
                 passwordEncoder.encode(googlePassword),
@@ -84,6 +82,6 @@ public class OAuthTokenService {
                 .authenticate(new UsernamePasswordAuthenticationToken(email, googlePassword));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return tokenProvider.generateToken(authentication).getAccessToken();
+        return jwtTokenProvider.generateToken(authentication).getAccessToken();
     }
 }

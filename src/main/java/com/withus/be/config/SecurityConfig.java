@@ -3,7 +3,7 @@ package com.withus.be.config;
 import com.withus.be.common.auth.jwt.JwtAccessDeniedHandler;
 import com.withus.be.common.auth.jwt.JwtAuthenticationEntryPoint;
 import com.withus.be.common.auth.jwt.JwtSecurityConfig;
-import com.withus.be.common.auth.jwt.TokenProvider;
+import com.withus.be.common.auth.jwt.JwtTokenValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenValidator jwtTokenValidator;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -31,7 +31,7 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
             "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui/**",
-            "/webjars/**", "/swagger-ui.html"
+            "/webjars/**", "/swagger-ui.html", "/error"
     };
 
     @Bean
@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .with(new JwtSecurityConfig(tokenProvider), customizer -> {
+                .with(new JwtSecurityConfig(jwtTokenValidator), customizer -> {
                 })
                 .build();
     }

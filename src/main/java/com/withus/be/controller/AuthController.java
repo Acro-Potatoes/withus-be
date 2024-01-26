@@ -1,6 +1,6 @@
 package com.withus.be.controller;
 
-import com.withus.be.common.auth.jwt.TokenProvider;
+import com.withus.be.common.auth.jwt.JwtTokenProvider;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.dto.LoginDto;
@@ -32,7 +32,7 @@ import static com.withus.be.common.auth.oauth.OAuthOption.JWT_HEADER_PREFIX;
 public class AuthController {
 
     private final AuthService authService;
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Operation(summary = "회원가입 API")
@@ -50,7 +50,7 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        TokenDto token = tokenProvider.generateToken(authentication);
+        TokenDto token = jwtTokenProvider.generateToken(authentication);
 
         return getTokenRes(token);
     }
@@ -58,7 +58,7 @@ public class AuthController {
     @Operation(summary = "Token 재발급", description = "Refresh Token으로 Token 재발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<Body> getRefresh(@RequestBody TokenDto tokenDto) {
-        TokenDto token = tokenProvider.generateTokenByRefreshToken(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+        TokenDto token = jwtTokenProvider.generateTokenByRefreshToken(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
         return getTokenRes(token);
     }
 
