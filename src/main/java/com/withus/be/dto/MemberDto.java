@@ -1,18 +1,80 @@
 package com.withus.be.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.withus.be.domain.Member;
 import com.withus.be.domain.constant.Authority;
 import com.withus.be.domain.constant.Provider;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class MemberDto {
 
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MemberRequest {
+        @NotNull
+        @Size(min = 3, max = 50)
+        private String email;
+
+        @NotNull
+        @Size(min = 3, max = 100)
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+        private String password;
+
+        @NotNull
+        @Size(min = 3, max = 50)
+        private String name;
+
+        private String nickname;
+
+        private String profileImage;
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        private Authority authority;
+
+
+        public static Member from(MemberRequest memberRequest, String password) {
+            if (memberRequest == null) return null;
+
+            return Member.builder()
+                    .email(memberRequest.getEmail())
+                    .password(password)
+                    .name(memberRequest.getName())
+                    .nickname(memberRequest.getNickname())
+                    .profileImage( // TODO 있으면 넣고 없으면 기본 이미지 넣기(S3에 default image 있음)
+                            memberRequest.getProfileImage() == null || memberRequest.getProfileImage().isEmpty()
+                                    ? "" : memberRequest.getProfileImage()
+                    )
+                    .activated(true)
+                    .authority(Authority.ROLE_USER)
+                    .provider(Provider.DEFAULT)
+                    .build();
+        }
+
+        public static Member from(String email, String name, String image, Provider provider) {
+            return Member.builder()
+                    .email(email)
+                    .password("") // social login 은 받아오는 값에 password 따로 없음.
+                    .name(name)
+                    .nickname("")
+                    .profileImage(image)
+                    .activated(true)
+                    .authority(Authority.ROLE_USER)
+                    .provider(provider)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MemberResponse {
         private Long id;
         private String name;
