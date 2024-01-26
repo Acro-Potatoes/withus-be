@@ -1,14 +1,15 @@
 package com.withus.be.common.auth.oauth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.withus.be.common.auth.oauth.GoogleOAuth;
-import com.withus.be.common.auth.oauth.OAuthService;
+import com.withus.be.common.auth.oauth.OAuthGoogleService;
+import com.withus.be.common.auth.oauth.OAuthTokenService;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.domain.constant.Provider;
 import com.withus.be.dto.TokenDto.OauthRefDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +28,14 @@ import static com.withus.be.common.auth.oauth.OAuthOption.JWT_HEADER_PREFIX;
 @RequestMapping("/oauth")
 public class OAuthController {
 
-    private final GoogleOAuth googleOauth;
-    private final OAuthService oAuthService;
+    private final OAuthGoogleService oauthGoogleService;
+    private final OAuthTokenService oAuthTokenService;
 
     @Operation(summary = "소설 로그인 API")
     @GetMapping("/{type}")
-    public void socialLoginRedirect(@PathVariable(name = "type") String type) throws IOException {
-        Provider provider = getProvider(type);
-        oAuthService.request(provider);
+    public void socialLoginRedirect(@PathVariable(name = "type") String type, HttpServletResponse response) throws IOException {
+        oAuthTokenService.providerValidCheck(getProvider(type));
+        response.sendRedirect(oauthGoogleService.getOAuthRedirectURL());
     }
 
     @Operation(summary = "소설 로그인 Callback API", description = "소셜 로그인 API 호출해서 요청 성공시 자동으로 호출")
@@ -45,7 +46,9 @@ public class OAuthController {
     ) throws Exception {
         log.info("소셜 로그인 API 로부터 받은 code : {}", code);
 
-        String accessToken = oAuthService.requestOAuthLogin(getProvider(type), code);
+        oAuthTokenService.providerValidCheck(getProvider(type));
+
+        String accessToken = oAuthTokenService.requestOAuthLogin(code);
         return getTokenRes(accessToken);
     }
 
@@ -55,10 +58,8 @@ public class OAuthController {
             @PathVariable("type") String type,
             @RequestBody OauthRefDto refresh
     ) throws JsonProcessingException {
-        Provider provider = getProvider(type);
-        String responseBody = googleOauth.requestRefreshToken(provider, refresh.refreshToken());
-        String accessToken = oAuthService.requestTokenByRefresh(responseBody);
-
+        String responseBody = oauthGoogleService.requestRefreshToken(getProvider(type), refresh.refreshToken());
+        String accessToken = oAuthTokenService.requestToken(responseBody);
         return getTokenRes(accessToken);
     }
 

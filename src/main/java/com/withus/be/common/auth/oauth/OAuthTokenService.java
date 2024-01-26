@@ -9,7 +9,6 @@ import com.withus.be.common.exception.UnknownProviderException;
 import com.withus.be.domain.constant.Provider;
 import com.withus.be.dto.MemberDto.MemberRequest;
 import com.withus.be.repository.MemberRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,44 +19,28 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OAuthService {
+public class OAuthTokenService {
 
-    private final GoogleOAuth googleOauth;
     private final TokenProvider tokenProvider;
-    private final HttpServletResponse response;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final OAuthGoogleService oauthGoogleService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Value("${OAuth2.google.default-password}")
     private String googlePassword;
 
-    public void request(Provider provider) throws IOException {
-        providerValidCheck(provider);
-        response.sendRedirect(googleOauth.getOAuthRedirectURL());
+    public String requestOAuthLogin(String code) throws Exception {
+        // 구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아오고 토큰 요청
+        return requestToken(oauthGoogleService.requestAccessToken(code));
     }
 
-    public String requestOAuthLogin(Provider socialLoginType, String code) throws Exception {
-        providerValidCheck(socialLoginType);
-
-        String accessTokenResponse = googleOauth.requestAccessToken(code);  // 구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
-        GoogleUser googleUser = resObjDeserializeProc(accessTokenResponse);
-
-        log.info("Google User : {}", googleUser);
-
-        String email = googleUser.getEmail();
-        ifYouDntHvMmbSv(email, googleUser);
-
-        return generateToken(email);
-    }
-
-    public String requestTokenByRefresh(String responseBody) throws JsonProcessingException {
+    public String requestToken(String responseBody) throws JsonProcessingException {
         GoogleUser googleUser = resObjDeserializeProc(responseBody);
 
         String email = googleUser.getEmail();
@@ -72,14 +55,16 @@ public class OAuthService {
      * 다시 JSON 형식의 응답 객체 => 자바 객체로 deserialization.
      */
     private GoogleUser resObjDeserializeProc(String accessTokenResponse) throws JsonProcessingException {
-        GoogleOAuthToken oAuthToken = googleOauth.getAccessToken(accessTokenResponse);
-        String userInfoResponse = googleOauth.requestUserInfo(oAuthToken);
+        GoogleOAuthToken oAuthToken = oauthGoogleService.getAccessToken(accessTokenResponse);
+        String userInfoResponse = oauthGoogleService.requestUserInfo(oAuthToken);
         return new ObjectMapper().readValue(userInfoResponse, GoogleUser.class);
     }
 
-    private void providerValidCheck(Provider socialLoginType) {
+    public void providerValidCheck(Provider socialLoginType) {
         if (Objects.requireNonNull(socialLoginType) != Provider.GOOGLE)
-            throw new UnknownProviderException("알 수 없는 소셜 로그인 형식입니다.");
+            throw new UnknownProviderException(
+                    String.format("'%s'은 알 수 없는 소셜 로그인 형식입니다.", socialLoginType)
+            );
     }
 
     private void ifYouDntHvMmbSv(String email, GoogleUser googleUser) {
@@ -95,7 +80,6 @@ public class OAuthService {
     }
 
     public String generateToken(String email) {
-        // token 생성
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(new UsernamePasswordAuthenticationToken(email, googlePassword));
         SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -9,11 +9,16 @@ import com.withus.be.domain.constant.Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,7 +28,7 @@ import static com.withus.be.common.auth.oauth.OAuthOption.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GoogleOAuth {
+public class OAuthGoogleService {
 
     @Value("${OAuth2.google.url}")
     private String GOOGLE_SNS_LOGIN_URL;
@@ -54,7 +59,11 @@ public class GoogleOAuth {
 
     private String getRedirectURL(Map<String, Object> params) {
         String parameterString = params.entrySet().stream()
-                .map(x -> x.getKey() + "=" + x.getValue())
+                .filter(entry -> entry.getValue() != null)
+                .map(entry -> URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8)
+                                + "="
+                                + URLEncoder.encode(String.valueOf(entry.getValue()), StandardCharsets.UTF_8)
+                )
                 .collect(Collectors.joining("&"));
 
         String redirectURL = GOOGLE_SNS_LOGIN_URL + "?" + parameterString;
@@ -76,7 +85,7 @@ public class GoogleOAuth {
 
     public String requestRefreshToken(Provider provider, String refreshToken) {
         if (Objects.requireNonNull(provider) != Provider.GOOGLE)
-            throw new UnknownProviderException("알 수 없는 소셜 로그인 형식입니다.");
+            throw new UnknownProviderException(String.format("'%s'은 알 수 없는 소셜 로그인 형식입니다.", provider));
 
         Map<String, Object> params = ImmutableMap.<String, Object>builder()
                 .put(CLIENT_ID, GOOGLE_SNS_CLIENT_ID)
@@ -90,7 +99,7 @@ public class GoogleOAuth {
 
     private String getTokenResBody(RestTemplate restTemplate, Map<String, Object> params) {
         ResponseEntity<String> tokenRes = restTemplate.postForEntity(GOOGLE_SNS_TOKEN_BASE_URL, params, String.class);
-        return tokenRes.getStatusCode() == HttpStatus.OK ? tokenRes.getBody() : "";
+        return tokenRes.getStatusCode().is2xxSuccessful() ? tokenRes.getBody() : tokenRes.getStatusCode().toString();
     }
 
     public GoogleOAuthToken getAccessToken(String responseBody) throws JsonProcessingException {
@@ -100,20 +109,16 @@ public class GoogleOAuth {
 
     /**
      * 구글로 엑세스 토큰을 보내 구글 사용자 정보를 받아온다.
-     *
-     * @param oAuthToken
-     * @return
      */
     public String requestUserInfo(GoogleOAuthToken oAuthToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION_HEADER, JWT_HEADER_PREFIX + oAuthToken.getAccess_token());
 
-        //HttpEntity를 하나 생성해 헤더를 담아 restTemplate으로 구글과 통신
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = new RestTemplate()
                 .exchange(GOOGLE_SNS_USERINFO_REQUEST_URL, HttpMethod.GET, request, String.class);
-        return response.getStatusCode().equals(HttpStatus.OK) ? response.getBody() : "";
+        return response.getStatusCode().is2xxSuccessful() ? response.getBody() : response.getStatusCode().toString();
     }
 
 }

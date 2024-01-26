@@ -9,7 +9,6 @@ import org.slf4j.MDC;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -85,18 +84,13 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<Body> methodArgumentNotValidException(MethodArgumentNotValidException e) {
-        String eventId = MDC.get(REQUEST_UUID);
-        String errMsg = NestedExceptionUtils.getMostSpecificCause(e).getMessage();
-        log.warn("[BaseException] eventId = {}, errorMsg = {}", eventId, errMsg);
+        log.warn("[BaseException] eventId = {}, errorMsg = {}", MDC.get(REQUEST_UUID), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
 
-        BindingResult bindingResult = e.getBindingResult();
-        FieldError fe = bindingResult.getFieldError();
-        if (fe != null) {
-            String message = "Request Error" + " " + fe.getField() + "=" + fe.getRejectedValue() + " (" + fe.getDefaultMessage() + ")";
-            return new ResponseFail(INVALID, message).fail();
-        } else {
-            return new ResponseFail(INVALID).fail();
-        }
+        FieldError fe = e.getBindingResult().getFieldError();
+        if (fe == null) return new ResponseFail(INVALID).fail();
+
+        String message = String.format("Request Error: %s=%s (%s)", fe.getField(), fe.getRejectedValue(), fe.getDefaultMessage());
+        return new ResponseFail(INVALID, message).fail();
     }
 
 }

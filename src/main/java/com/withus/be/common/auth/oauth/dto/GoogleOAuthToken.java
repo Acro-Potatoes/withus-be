@@ -16,15 +16,4 @@ public class GoogleOAuthToken {
     private String token_type;
     private String id_token;
     private String refresh_token;
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @Builder
-    public static class GoogleOAuthResponse {
-        private String jwtToken;
-        private String accessToken;
-        private String tokenType;
-    }
-
 }
