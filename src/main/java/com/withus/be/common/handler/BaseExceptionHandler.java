@@ -3,9 +3,6 @@ package com.withus.be.common.handler;
 import com.withus.be.common.exception.BaseException;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseFail;
-import com.withus.be.common.response.ResponseSuccess;
-import com.withus.be.common.response.Result;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.MDC;
@@ -81,6 +78,7 @@ public class BaseExceptionHandler {
 
     /**
      * http status: 400 AND result: FAIL
+     * <p>
      * request parameter 에러
      */
     @ResponseBody
