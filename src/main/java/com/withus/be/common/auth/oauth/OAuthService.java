@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.withus.be.common.auth.jwt.TokenProvider;
 import com.withus.be.common.auth.oauth.dto.GoogleOAuthToken;
 import com.withus.be.common.auth.oauth.dto.GoogleUser;
+import com.withus.be.common.exception.UnknownProviderException;
 import com.withus.be.domain.constant.Provider;
 import com.withus.be.dto.MemberDto.MemberRequest;
 import com.withus.be.repository.MemberRepository;
@@ -78,7 +79,7 @@ public class OAuthService {
 
     private void providerValidCheck(Provider socialLoginType) {
         if (Objects.requireNonNull(socialLoginType) != Provider.GOOGLE)
-            throw new IllegalArgumentException("알 수 없는 소셜 로그인 형식입니다.");
+            throw new UnknownProviderException("알 수 없는 소셜 로그인 형식입니다.");
     }
 
     private void ifYouDntHvMmbSv(String email, GoogleUser googleUser) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.withus.be.common.auth.oauth.dto.GoogleOAuthToken;
+import com.withus.be.common.exception.UnknownProviderException;
 import com.withus.be.domain.constant.Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +76,7 @@ public class GoogleOAuth {
 
     public String requestRefreshToken(Provider provider, String refreshToken) {
         if (Objects.requireNonNull(provider) != Provider.GOOGLE)
-            throw new IllegalArgumentException("알 수 없는 소셜 로그인 형식입니다.");
+            throw new UnknownProviderException("알 수 없는 소셜 로그인 형식입니다.");
 
         Map<String, Object> params = ImmutableMap.<String, Object>builder()
                 .put(CLIENT_ID, GOOGLE_SNS_CLIENT_ID)

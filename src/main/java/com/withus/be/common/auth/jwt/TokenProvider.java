@@ -1,9 +1,9 @@
 package com.withus.be.common.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.withus.be.common.exception.InvalidTokenException;
 import com.withus.be.dto.TokenDto;
 import com.withus.be.dto.TokenDto.RefreshDto;
-import com.withus.be.dto.TokenDto.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -108,14 +108,12 @@ public class TokenProvider implements InitializingBean {
     @SuppressWarnings("unchecked")
     public TokenDto generateTokenByRefreshToken(String accessToken, String refreshToken) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(refreshToken))) {
-            throw new IllegalArgumentException("Refresh Token에 해당하는 값이 없습니다.");
-//            return TokenResponse.of("Refresh Token에 해당하는 값이 없습니다.");
+            throw new InvalidTokenException("Refresh Token에 해당하는 값이 없습니다.");
         }
 
         Object obj = redisTemplate.opsForValue().get(refreshToken);
         if (!String.valueOf(obj).contains(accessToken)) {
-            throw new IllegalArgumentException("Access Token이 일치하지 않습니다.");
-//            return TokenResponse.of("Access Token이 일치하지 않습니다.");
+            throw new InvalidTokenException("Access Token이 일치하지 않습니다.");
         }
         redisTemplate.delete(refreshToken);
 
