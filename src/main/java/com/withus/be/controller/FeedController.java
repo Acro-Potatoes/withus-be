@@ -3,6 +3,7 @@ package com.withus.be.controller;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
+import com.withus.be.service.FeedReplyService;
 import com.withus.be.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 public class FeedController {
 
     private final FeedService feedService;
+    private final FeedReplyService feedReplyService;
 
     @GetMapping("/list")
     public ResponseEntity<?> list(){
@@ -49,7 +51,7 @@ public class FeedController {
         log.info("POST: /withus/write - 피드 생성 {}", request);
         //에러처리 필요
 
-        List<FeedResponse> feedResponse = feedService.write(request);
+        FeedResponse feedResponse = feedService.write(request);
         return ResponseEntity.ok().body(feedResponse);
     }
 
@@ -74,6 +76,9 @@ public class FeedController {
 
         return ResponseEntity.ok().body("삭제 성공!!");
     }
+
+
+
 
 
 

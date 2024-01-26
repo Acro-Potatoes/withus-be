@@ -45,11 +45,11 @@ public class FeedService {
     }
 
     //피드 생성
-    public List<FeedResponse> write(FeedsWriteRequest request) {
+    public FeedResponse write(FeedsWriteRequest request) {
         //멤버넣기
         Feed feed = feedRepository.save(request.toEntity());
-        List<FeedResponse> response = getList();
-        return response;
+//        List<FeedResponse> response = getList();
+        return FeedResponse.of(feed);
     }
 
     //피드 수정

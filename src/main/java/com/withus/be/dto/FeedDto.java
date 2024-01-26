@@ -42,8 +42,8 @@ public class FeedDto {
                     .id(feed.getFeed_id())
                     .title(feed.getTitle())
                     .content(feed.getContent())
-                    .created_at(feed.getCreated_at())
-                    .updated_at(feed.getUpdated_at())
+                    .created_at(feed.getCreatedAt())
+                    .updated_at(feed.getUpdatedAt())
                     .build();
         }
     }
