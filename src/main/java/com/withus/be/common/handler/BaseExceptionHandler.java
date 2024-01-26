@@ -1,7 +1,6 @@
 package com.withus.be.common.handler;
 
 import com.withus.be.common.exception.BaseException;
-import com.withus.be.common.response.Response;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseFail;
 import com.withus.be.common.response.Result;
@@ -56,6 +55,21 @@ public class BaseExceptionHandler {
         return new ResponseFail(httpStatusVerification(response), errMsg).fail();
     }
 
+    // TODO : 임시 -> custom exception 
+    @ResponseBody
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<Body> illegal(Exception e, HttpServletResponse response) {
+        String eventId = MDC.get(REQUEST_UUID);
+        String errMsg = NestedExceptionUtils.getMostSpecificCause(e).getMessage();
+        log.error("[BaseException] eventId = {}, cause = {}, errMsg = {}",
+                eventId,
+                NestedExceptionUtils.getMostSpecificCause(e).getStackTrace()[0],
+                errMsg);
+
+        return new ResponseFail(httpStatusVerification(response), errMsg).fail();
+    }
+
+    // TODO 수정 필요 - 현재 너무 한정적임
     private Result httpStatusVerification(HttpServletResponse response) {
         HttpStatus httpStatus = HttpStatus.valueOf(response.getStatus());
         return httpStatus.is4xxClientError() ? BAD_REQUEST : INTERNAL_ERROR;

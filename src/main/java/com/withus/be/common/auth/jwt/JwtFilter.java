@@ -13,11 +13,12 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+import static com.withus.be.common.auth.oauth.OAuthOption.AUTHORIZATION_HEADER;
+import static com.withus.be.common.auth.oauth.OAuthOption.JWT_HEADER_PREFIX;
+
 @Slf4j
 public class JwtFilter extends GenericFilterBean {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String HEADER_PREFIX = "Bearer ";
     private final TokenProvider tokenProvider;
 
     public JwtFilter(TokenProvider tokenProvider) {
@@ -43,11 +44,7 @@ public class JwtFilter extends GenericFilterBean {
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(HEADER_PREFIX)) {
-            return bearerToken.substring(7);
-        }
-
-        return null;
+        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith(JWT_HEADER_PREFIX)) return null;
+        return bearerToken.substring(7);
     }
 }

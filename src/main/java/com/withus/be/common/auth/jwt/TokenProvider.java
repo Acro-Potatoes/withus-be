@@ -106,14 +106,16 @@ public class TokenProvider implements InitializingBean {
     }
 
     @SuppressWarnings("unchecked")
-    public TokenResponse generateTokenByRefreshToken(String accessToken, String refreshToken) {
+    public TokenDto generateTokenByRefreshToken(String accessToken, String refreshToken) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(refreshToken))) {
-            return TokenResponse.of("Refresh Token에 해당하는 값이 없습니다.");
+            throw new IllegalArgumentException("Refresh Token에 해당하는 값이 없습니다.");
+//            return TokenResponse.of("Refresh Token에 해당하는 값이 없습니다.");
         }
 
         Object obj = redisTemplate.opsForValue().get(refreshToken);
         if (!String.valueOf(obj).contains(accessToken)) {
-            return TokenResponse.of("Access Token이 일치하지 않습니다.");
+            throw new IllegalArgumentException("Access Token이 일치하지 않습니다.");
+//            return TokenResponse.of("Access Token이 일치하지 않습니다.");
         }
         redisTemplate.delete(refreshToken);
 
@@ -126,7 +128,7 @@ public class TokenProvider implements InitializingBean {
         String newAccess = getAt(email, authority);
         String newRefresh = generateRefreshToken(newAccess, email, authority);
 
-        return TokenResponse.of(newAccess, newRefresh);
+        return new TokenDto(newAccess, newRefresh);
     }
 
     private String getAt(String email, String authority) {
