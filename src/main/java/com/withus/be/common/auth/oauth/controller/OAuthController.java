@@ -3,15 +3,21 @@ package com.withus.be.common.auth.oauth.controller;
 import com.withus.be.common.auth.oauth.GoogleOAuth;
 import com.withus.be.common.auth.oauth.OAuthService;
 import com.withus.be.common.auth.oauth.dto.GoogleOAuthToken;
+import com.withus.be.common.response.Response.Body;
+import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.domain.constant.Provider;
 import com.withus.be.dto.TokenDto.OauthRefreshDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+/**
+ * 소셜 로그인 관련 컨트롤러로 Auth Controller와 통합 고민중
+ */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +33,7 @@ public class OAuthController {
     }
 
     @GetMapping(value = "/{type}/callback")
-    public void callback(
+    public ResponseEntity<Body> callback(
             @PathVariable(name = "type") String type,
             @RequestParam(name = "code") String code,
             HttpServletRequest request
@@ -39,6 +45,8 @@ public class OAuthController {
         String accessToken = googleOAuthToken.getAccess_token();
 
         // TODO response.sendRedirect 할건지 ResponseEntity로 값 넘겨줄건지
+
+        return new ResponseSuccess().success(accessToken);
     }
 
 
