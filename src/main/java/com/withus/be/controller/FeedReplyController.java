@@ -34,7 +34,7 @@ public class FeedReplyController {
     public ResponseEntity<?> writeReply(
             @RequestBody FeedReplyInsertRequest dto
     ) {
-        log.info("POST : /withus/reply/write - QNA {}번 게시글에 '{}' 댓글 작성", dto.getId(), dto.getContents());
+        log.info("/withus/reply/write - {}번 피드에 '{}' 댓글 작성", dto.getId(), dto.getContents());
 
         feedReplyService.writeReply(dto);
         List<FeedRelyResponse> list = feedReplyService.getList(dto.getId());
@@ -46,7 +46,7 @@ public class FeedReplyController {
     public ResponseEntity<?> deleteReply(
             @PathVariable Long replyId
     ) {
-//        log.info("DELETE : /qna-reply/delete/{} - QNA 댓글 삭제", replyIdx);
+        log.info("DELETE : withus/reply/delete/{} - 댓글 삭제", replyId);
 
         feedReplyService.delete(replyId);
 
@@ -57,8 +57,7 @@ public class FeedReplyController {
     public ResponseEntity<?> modifyReply(
             @RequestBody FeedReplyModifyRequest dto
     ) {
-//        log.info("PATCH : /qna-reply/modify/{} - QNA 댓글 수정", dto.getReplyIdx());
-
+        log.info("witus/reply/modify/{} - 댓글 수정", dto.getId());
 
         String  message =  feedReplyService.modify(dto);
 
