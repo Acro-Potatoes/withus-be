@@ -1,7 +1,5 @@
 package com.withus.be.controller;
 
-import com.fasterxml.jackson.databind.deser.ResolvableDeserializer;
-import com.withus.be.dto.FeedDto;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
@@ -9,7 +7,6 @@ import com.withus.be.service.FeedReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

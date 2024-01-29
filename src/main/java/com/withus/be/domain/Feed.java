@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 //@ToString(exclude = {"member"})
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of={"feed_id"})
 @Entity
 @Table(name = "feed")
 public class Feed {
@@ -30,6 +30,11 @@ public class Feed {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id")
 //    private  Member member_id;
+
+    @Column(nullable = false)
+    private int likeCount;
+
+    //좋아요 누른 멤버에 대한 리스트 필요
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

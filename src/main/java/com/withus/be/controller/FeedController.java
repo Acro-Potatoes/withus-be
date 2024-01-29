@@ -3,6 +3,7 @@ package com.withus.be.controller;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
+import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedReplyService;
 import com.withus.be.service.FeedService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class FeedController {
 
     private final FeedService feedService;
     private final FeedReplyService feedReplyService;
+    private final FeedLikeService feedLikeService;
 
     @GetMapping("/list")
     public ResponseEntity<?> list(){
@@ -77,7 +79,29 @@ public class FeedController {
         return ResponseEntity.ok().body("삭제 성공!!");
     }
 
+    /**
+     * 피드 - 좋아요 기능
+     * 한 게시물에 (회원당 ) 좋아요 1번만 가능
+     *
+//     * @param tokenUserInfo : 로그인 중인 유저의 정보
+     * @param feedId : 좋아요 누른 게시글 번호
+     */
 
+    @PostMapping("/like/{feedId}")
+    public ResponseEntity<?> handleLike(
+            @PathVariable Long feedId
+    ){
+//        log.info("like click : memberId = {}, feedId = {}", ,feedId);
+        boolean isLiked = feedLikeService.checkIfLiked(feedId);
+        feedLikeService.handleLike(feedId);
+        System.out.println("isLiked =  "+ isLiked);
+
+        if(isLiked){
+            return ResponseEntity.ok().body("좋아요 취소");
+        }else{
+            return ResponseEntity.ok().body("좋아요 +1");
+        }
+    }
 
 
 

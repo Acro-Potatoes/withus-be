@@ -72,6 +72,7 @@ public class FeedService {
     }
 
 
-
-
+    public Feed getFeed(Long feedId) {
+        return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException( feedId +"번 게시물이 존재하지 않습니다."));
+    }
 }
