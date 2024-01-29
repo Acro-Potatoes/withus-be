@@ -22,7 +22,7 @@ import java.util.List;
 public class FeedController {
 
     private final FeedService feedService;
-    private final FeedReplyService feedReplyService;
+//    private final FeedReplyService feedReplyService;
     private final FeedLikeService feedLikeService;
 
     @GetMapping("/list")

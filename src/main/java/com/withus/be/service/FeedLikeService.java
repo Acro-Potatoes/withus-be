@@ -21,8 +21,6 @@ public class FeedLikeService {
 
     public void handleLike(Long feedId){
         Feed feed = feedService.getFeed(feedId);
-
-
         FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(feed);
 
         if(feedLike == null){
@@ -30,16 +28,30 @@ public class FeedLikeService {
 //                    .member(member)
                     .feed(feed)
                     .build();
-            feedRepository.save(feedLike);
+            feedLikeRepository.save(feedLike);
 
             //좋아요 수 증가
             feed.setLikeCount(feed.getLikeCount() + 1);
-            log.info("{}멤버가 좋아요 클릭 ", );
+            log.info("멤버가 좋아요 클릭 ->{}", feed.getLikeCount());
+        }else{
+            //좋아요 취소
+            feedLikeRepository.delete(feedLike);
+            log.info("멤버가 좋아요 취소 ->{}", feed.getLikeCount());
+            feed.setLikeCount(feed.getLikeCount() - 1);
         }
+        feedRepository.save(feed);
 
     }
 
     public boolean checkIfLiked(Long feedId) {
+        FeedLike feedLike
+                = feedLikeRepository.findByMemberAndFeed(
+//                userUtil.getUser(userIdx),
+                feedService.getFeed(feedId)
+        );
+        System.out.println("좋아요 여부 = " + feedLike);
 
+        // feedLike가 null이 아니라면 좋아요가 선택되어 있다고 판단합니다.
+        return feedLike != null;
     }
 }
