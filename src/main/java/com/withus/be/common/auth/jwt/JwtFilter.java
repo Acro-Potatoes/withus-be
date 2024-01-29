@@ -22,6 +22,7 @@ import static com.withus.be.common.auth.oauth.OAuthOption.JWT_HEADER_PREFIX;
 public class JwtFilter extends GenericFilterBean {
 
     private final JwtTokenValidator jwtTokenValidator;
+    private static final int SUBSTRING_BEARER_INDEX = 7;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,12 +30,13 @@ public class JwtFilter extends GenericFilterBean {
         String resolvedToken = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
-        if (!StringUtils.hasText(resolvedToken) || !jwtTokenValidator.validateToken(resolvedToken))
+        if (StringUtils.hasText(resolvedToken) && jwtTokenValidator.validateToken(resolvedToken)) {
+            Authentication authentication = jwtTokenValidator.getAuthentication(resolvedToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri : {}", authentication.getName(), requestURI);
+        } else {
             log.debug("유효한 JWT 토큰이 없습니다, uri : {}", requestURI);
-
-        Authentication authentication = jwtTokenValidator.getAuthentication(resolvedToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri : {}", authentication.getName(), requestURI);
+        }
 
         filterChain.doFilter(request, response);
     }
@@ -42,6 +44,6 @@ public class JwtFilter extends GenericFilterBean {
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith(JWT_HEADER_PREFIX)) return null;
-        return bearerToken.substring(7);
+        return bearerToken.substring(SUBSTRING_BEARER_INDEX);
     }
 }
