@@ -54,7 +54,7 @@ public class TokenDto {
         }
     }
 
-    public record OauthRefreshDto(String refreshToken) {
+    public record OauthRefDto(String refreshToken) {
     }
 
 }

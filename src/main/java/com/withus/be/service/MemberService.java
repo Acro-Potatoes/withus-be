@@ -17,4 +17,12 @@ public class MemberService {
                 .map(MemberResponse::of)
                 .orElseThrow(() -> new EntityNotFoundException("Member not found"));
     }
+
+    public MemberResponse getMyInfo(String email) {
+        return memberRepository.findByEmail(email)
+                .map(MemberResponse::of)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(
+                        "There is no corresponding member for '%s'.", email
+                )));
+    }
 }

@@ -24,7 +24,9 @@ public class CustomUserDetailsService implements UserDetailsService {
    public UserDetails loadUserByUsername(final String email) {
       return memberRepository.findByEmail(email)
               .map(member -> createUser(email, member))
-              .orElseThrow(() -> new UsernameNotFoundException(String.format("'%s' -> can't find it in database.", email)));
+              .orElseThrow(() -> new UsernameNotFoundException(
+                      String.format("'%s' -> can't find it in database.", email))
+              );
    }
 
    private User createUser(String email, Member member) {

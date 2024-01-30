@@ -57,10 +57,10 @@ public class MemberDto {
                     .build();
         }
 
-        public static Member from(String email, String name, String image, Provider provider) {
+        public static Member from(String email, String password, String name, String image, Provider provider) {
             return Member.builder()
                     .email(email)
-                    .password("") // social login 은 받아오는 값에 password 따로 없음.
+                    .password(password)
                     .name(name)
                     .nickname("")
                     .profileImage(image)

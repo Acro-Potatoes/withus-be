@@ -1,8 +1,11 @@
 package com.withus.be.controller;
 
+import com.withus.be.common.exception.InvalidTokenException;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.service.MemberService;
+import com.withus.be.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +22,18 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "특정 회원 정보 조회 API")
     @GetMapping("/{id}")
     public ResponseEntity<Body> getMember(@PathVariable(value = "id") Long id) {
         return new ResponseSuccess().success(memberService.getMemberInfo(id));
+    }
+
+    @Operation(summary = "개인정보 조회 API")
+    @GetMapping
+    public ResponseEntity<Body> getMyInfo() {
+        return new ResponseSuccess().success(memberService.getMyInfo(SecurityUtil.getCurrentEmail().orElseThrow(
+                () -> new InvalidTokenException("인증이 필요합니다.")))
+        );
     }
 
 }

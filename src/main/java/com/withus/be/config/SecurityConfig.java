@@ -3,7 +3,7 @@ package com.withus.be.config;
 import com.withus.be.common.auth.jwt.JwtAccessDeniedHandler;
 import com.withus.be.common.auth.jwt.JwtAuthenticationEntryPoint;
 import com.withus.be.common.auth.jwt.JwtSecurityConfig;
-import com.withus.be.common.auth.jwt.TokenProvider;
+import com.withus.be.common.auth.jwt.JwtTokenValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +22,16 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final TokenProvider tokenProvider;
+
+    private final JwtTokenValidator jwtTokenValidator;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private static final String[] WHITE_LIST_URL = {
-            "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/index.html", "/webjars/**", "/swagger/**"
+            "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
+            "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui/**",
+            "/webjars/**", "/swagger-ui.html", "/error"
     };
 
     @Bean
@@ -47,8 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .requestMatchers("/auth/login", "auth/google/**", "/auth/signup").permitAll()
-//                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .requestMatchers("/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
@@ -57,7 +59,7 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .with(new JwtSecurityConfig(tokenProvider), customizer -> {
+                .with(new JwtSecurityConfig(jwtTokenValidator), customizer -> {
                 })
                 .build();
     }

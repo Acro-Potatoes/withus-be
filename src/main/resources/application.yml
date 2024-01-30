@@ -11,6 +11,11 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  devtools:
+    remote:
+      restart:
+        enabled: true
+
 logging:
   config: classpath:logback/logback.xml
   level:

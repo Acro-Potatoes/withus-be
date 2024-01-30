@@ -12,14 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public MemberResponse signup(MemberRequest memberRequest) {
-        if (memberRepository.findByEmail(memberRequest.getEmail()).orElse(null) != null) {
+        if (memberRepository.findByEmail(memberRequest.getEmail()).isPresent())
             throw new DuplicatedException("이미 가입되어 있는 유저입니다.");
-        }
 
         return MemberResponse.of(memberRepository.save(
                 MemberRequest.from(memberRequest, passwordEncoder.encode(memberRequest.getPassword()))));

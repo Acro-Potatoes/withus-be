@@ -3,12 +3,12 @@ package com.withus.be.common.auth.oauth.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
+@Builder
 public class GoogleOAuthToken {
     private String access_token;
     private int expires_in;
