@@ -5,9 +5,11 @@ import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
 import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedService;
+import com.withus.be.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

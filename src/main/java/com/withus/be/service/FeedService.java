@@ -1,11 +1,15 @@
 package com.withus.be.service;
 
+import com.withus.be.common.exception.EntityNotFoundException;
+import com.withus.be.common.exception.InvalidTokenException;
 import com.withus.be.domain.Feed;
+import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
 import com.withus.be.repository.FeedRepository;
 import com.withus.be.repository.MemberRepository;
+import com.withus.be.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +26,26 @@ import java.util.stream.Collectors;
 @Transactional
 public class FeedService {
 
+//    private SecurityUtil securityUtil;
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
 
 
     //리스트 가져오기
     public List<FeedResponse> getList() {
-        List<Feed> feed = feedRepository.findAll();
-        return feed.stream().map(FeedResponse::of).collect(Collectors.toList());
+        Optional<String> currentEmail = SecurityUtil.getCurrentEmail();
+        if(currentEmail.isPresent()){
+            Member member = memberRepository.findByEmail(currentEmail.get()).orElseThrow(
+                    () -> new EntityNotFoundException("없는 이메일입니다.")
+            );
+
+            List<Feed> feed = member.getFeeds();
+
+            return feed.stream().map(FeedResponse::of).collect(Collectors.toList());
+        }else{
+            throw new InvalidTokenException("해당하는 이메일이 없습니다");
+
+        }
     }
 
     //최신순 조회

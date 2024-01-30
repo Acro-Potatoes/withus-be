@@ -3,9 +3,7 @@ package com.withus.be.domain;
 import com.withus.be.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class Feed extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "email")
     private  Member member;
 
     @OneToMany(mappedBy = "feed")
