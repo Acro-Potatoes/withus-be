@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/withus/reply")
 public class FeedReplyController {
+
     private final FeedReplyService feedReplyService;
 
     @GetMapping("/{replyId}")
@@ -31,10 +32,10 @@ public class FeedReplyController {
     public ResponseEntity<?> writeReply(
             @RequestBody FeedReplyInsertRequest dto
     ) {
-        log.info("/withus/reply/write - {}번 피드에 '{}' 댓글 작성", dto.getId(), dto.getContents());
+        log.info("/withus/reply/write - {}번 피드에 '{}' 댓글 작성", dto.getFeedId(), dto.getContent());
 
         feedReplyService.writeReply(dto);
-        List<FeedRelyResponse> list = feedReplyService.getList(dto.getId());
+        List<FeedRelyResponse> list = feedReplyService.getList(dto.getFeedId());
 
         return ResponseEntity.ok(list);
     }
@@ -54,7 +55,7 @@ public class FeedReplyController {
     public ResponseEntity<?> modifyReply(
             @RequestBody FeedReplyModifyRequest dto
     ) {
-        log.info("witus/reply/modify/{} - 댓글 수정", dto.getId());
+        log.info("witus/reply/modify/{} - 댓글 수정", dto.getFeedId());
 
         String  message =  feedReplyService.modify(dto);
 

@@ -20,8 +20,9 @@ public class FeedLikeService {
     private final FeedService feedService;
 
     public void handleLike(Long feedId){
+//        Long memberId =
         Feed feed = feedService.getFeed(feedId);
-        FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(feed);
+        FeedLike feedLike = feedLikeRepository.findByFeed(feed);
 
         if(feedLike == null){
             feedLike = FeedLike.builder()
@@ -45,13 +46,10 @@ public class FeedLikeService {
 
     public boolean checkIfLiked(Long feedId) {
         FeedLike feedLike
-                = feedLikeRepository.findByMemberAndFeed(
-//                userUtil.getUser(userIdx),
-                feedService.getFeed(feedId)
-        );
+                = feedLikeRepository.findByFeed(feedService.getFeed(feedId));
         System.out.println("좋아요 여부 = " + feedLike);
 
-        // feedLike가 null이 아니라면 좋아요가 선택되어 있다고 판단합니다.
+        // feedLike가 null이 아니라면 좋아요 선택
         return feedLike != null;
     }
 }

@@ -1,9 +1,6 @@
 package com.withus.be.service;
 
-import com.withus.be.domain.Feed;
 import com.withus.be.domain.FeedReply;
-import com.withus.be.domain.Member;
-import com.withus.be.dto.FeedDto;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
@@ -12,8 +9,6 @@ import com.withus.be.repository.FeedRepository;
 import com.withus.be.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -51,8 +46,8 @@ public class FeedReplyService {
 
 //        Feed feed = feedRepository.findById()
 
-        FeedReply feedReply = FeedReplyInsertRequest.builder().id(dto.getId())
-                .contents(dto.getContents())
+        FeedReply feedReply = FeedReplyInsertRequest.builder().feedId(dto.getFeedId())
+                .content(dto.getContent())
                 .build().toEntity();
 
 //        feedRepository.save(feed);
@@ -60,10 +55,10 @@ public class FeedReplyService {
     }
 
     public String modify(FeedReplyModifyRequest dto) {
-        Optional<FeedReply> feedReply = feedReplyRepository.findById(dto.getId());
+        Optional<FeedReply> feedReply = feedReplyRepository.findById(dto.getFeedId());
         FeedReply feedReply1 = feedReply.orElseThrow();
 
-        feedReply1.setReplyContent(dto.getContents());
+        feedReply1.setReplyContent(dto.getContent());
         feedReplyRepository.save(feedReply1);
 
         return "성공";

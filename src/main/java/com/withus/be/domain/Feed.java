@@ -19,7 +19,8 @@ public class Feed {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long feed_id;
+    @Column(name = "feed_id")
+    private Long feedId;
 
     @Column(length = 100, nullable = false)
     private String title;
@@ -31,7 +32,7 @@ public class Feed {
 //    @JoinColumn(name = "member_id")
 //    private  Member member_id;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private int likeCount;
 
     //좋아요 누른 멤버에 대한 리스트 필요

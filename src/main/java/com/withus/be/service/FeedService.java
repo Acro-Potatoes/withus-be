@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,20 +46,24 @@ public class FeedService {
     }
 
     //피드 생성
-    public FeedResponse write(FeedsWriteRequest request) {
-        //멤버넣기
-        Feed feed = feedRepository.save(request.toEntity());
-//        List<FeedResponse> response = getList();
-        return FeedResponse.of(feed);
+    public List<FeedResponse> write(FeedsWriteRequest request) {
+        try {
+            //멤버넣기
+            feedRepository.save(request.toEntity());
+            return getList();
+        } catch (Exception e){
+            log.error("실패!!");
+            return Collections.emptyList();
+        }
     }
 
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
-        Optional<Feed> optionalFeed = feedRepository.findById(dto.getId());
+        Optional<Feed> optionalFeed = feedRepository.findById(dto.getFeedId());
         Feed feed = optionalFeed.orElseThrow();
 
         feed.setTitle(dto.getTitle());
-        feed.setContent(dto.getContents());
+        feed.setContent(dto.getContent());
 
         feedRepository.save(feed);
 

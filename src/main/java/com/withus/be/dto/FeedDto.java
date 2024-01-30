@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -20,10 +18,11 @@ public class FeedDto {
     @Setter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class FeedResponse{
 
         private int count;
-        private Long id;
+        private Long feedId;
 
         private String title;
 
@@ -37,7 +36,7 @@ public class FeedDto {
 
         public static FeedResponse of(Feed feed){
             return FeedResponse.builder()
-                    .id(feed.getFeed_id())
+                    .feedId(feed.getFeedId())
                     .title(feed.getTitle())
                     .content(feed.getContent())
                     .created_at(feed.getCreatedAt())
@@ -50,6 +49,7 @@ public class FeedDto {
     @Setter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public  static class FeedsWriteRequest{
 
         @NotBlank(message = "제목을 입력해주세요.")
@@ -58,10 +58,12 @@ public class FeedDto {
 
         @NotBlank(message = "내용을 입력해주세요.")
         @Size(min = 1, max = 3000)
-        private String contents;
+        private String content;
 
         public Feed toEntity() {
-            return Feed.builder().content(this.contents).title(this.title)
+            return Feed.builder()
+                    .content(this.content)
+                    .title(this.title)
                     .build();
         }
     }
@@ -70,22 +72,23 @@ public class FeedDto {
     @Setter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public  static class FeedModifyRequest{
 
         @NotNull
-        private Long id;
+        private Long feedId;
 
         @Size(min = 1, max = 100)
         private String title;
 
         @Size(min = 1, max = 3000)
-        private String contents;
+        private String content;
 
 //        @CreationTimestamp //수정시간(저절로 생성)
 //        private LocalDateTime update_time;
 
         public Feed toEntity() {
-            return Feed.builder().content(this.contents).title(this.title)
+            return Feed.builder().content(this.content).title(this.title)
                     .build();
         }
     }
@@ -101,16 +104,16 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedRelyResponse{
 
-        private Long id;
-        private String contents;
+        private Long feedId;
+        private String content;
         private String replyWriter;
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime replyDate;
 
         public FeedRelyResponse(FeedReply feedReply) {
-            this.id = id;
-            this.contents = contents;
+            this.feedId = feedId;
+            this.content = content;
             this.replyWriter = replyWriter;
             this.replyDate = replyDate;
         }
@@ -127,15 +130,15 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyInsertRequest{
 
-        private Long id;
-        private String contents;
+        private Long feedId;
+        private String content;
         private String replyWriter;
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDateTime replyDate;
+//        @JsonFormat(pattern = "yyyy-MM-dd")
+//        private LocalDateTime replyDate;
 
         public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.contents).replyWriter(this.replyWriter)
+            return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)
                     .build();
         }
 
@@ -150,15 +153,15 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyModifyRequest{
 
-        private Long id;
-        private String contents;
+        private Long feedId;
+        private String content;
         private String replyWriter;
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime replyDate;
 
         public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.contents).replyWriter(this.replyWriter)
+            return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)
                     .build();
         }
 
