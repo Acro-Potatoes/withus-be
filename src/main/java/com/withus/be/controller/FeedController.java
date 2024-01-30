@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/withus")
+@RequestMapping("/feeds")
 public class FeedController {
 
     private final FeedService feedService;
