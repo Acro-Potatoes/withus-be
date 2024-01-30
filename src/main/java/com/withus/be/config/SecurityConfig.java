@@ -34,6 +34,11 @@ public class SecurityConfig {
             "/webjars/**", "/swagger-ui.html", "/error"
     };
 
+    private static final String[] AUTH_LIST_URL = {
+            "/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup", "/auth/cert-mail",
+            "/auth/cert-mail/confirm"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -50,7 +55,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .requestMatchers("/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup").permitAll()
+                                .requestMatchers(AUTH_LIST_URL).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
