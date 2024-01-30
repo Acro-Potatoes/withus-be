@@ -1,5 +1,6 @@
 package com.withus.be.service;
 
+import com.withus.be.common.exception.InvalidParameterException;
 import com.withus.be.dto.EmailDto;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -92,7 +93,7 @@ public class MailService {
     public String confirmCertNum(EmailDto emailDto) {
         String email = emailDto.getEmail();
         if (!(Objects.equals(redisTemplate.opsForValue().get(email), emailDto.getCertNum())))
-            return "인증 번호가 올바르지 않습니다.";
+            throw new InvalidParameterException("인증 번호가 올바르지 않습니다.");
 
         redisTemplate.delete(email);
         return "인증에 성공했습니다.";

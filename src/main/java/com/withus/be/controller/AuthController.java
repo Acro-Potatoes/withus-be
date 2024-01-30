@@ -75,7 +75,7 @@ public class AuthController {
 
     @Operation(summary = "Email 인증 번호 확인", description = "Email 인증 번호 확인 (5분 이내)")
     @PostMapping("/cert-mail/confirm")
-    public ResponseEntity<Body> confirmCertNum(@RequestBody EmailDto emailDto) {
+    public ResponseEntity<Body> confirmCertNum(@Valid @RequestBody EmailDto emailDto) {
         return new ResponseSuccess().success(mailService.confirmCertNum(emailDto));
     }
 

@@ -1,6 +1,6 @@
 package com.withus.be.controller;
 
-import com.withus.be.common.exception.InvalidTokenException;
+import com.withus.be.common.exception.InvalidParameterException;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.service.MemberService;
@@ -32,7 +32,7 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<Body> getMyInfo() {
         return new ResponseSuccess().success(memberService.getMyInfo(SecurityUtil.getCurrentEmail().orElseThrow(
-                () -> new InvalidTokenException("인증이 필요합니다.")))
+                () -> new InvalidParameterException("인증이 필요합니다.")))
         );
     }
 

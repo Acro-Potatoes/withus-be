@@ -2,13 +2,13 @@ package com.withus.be.common.exception;
 
 import static com.withus.be.common.response.Result.INVALID;
 
-public class InvalidTokenException extends BaseException {
+public class InvalidParameterException extends BaseException {
 
-    public InvalidTokenException() {
+    public InvalidParameterException() {
         super(INVALID);
     }
 
-    public InvalidTokenException(String message) {
+    public InvalidParameterException(String message) {
         super(INVALID, message);
     }
 }
