@@ -6,6 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,9 +31,16 @@ public class Feed extends BaseEntity {
     @Column(length = 3000, nullable = false)
     private String content;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private  Member member_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private  Member member;
+
+    @OneToMany(mappedBy = "feed")
+    private List<FeedLike> feedLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "feed")
+    private List<FeedReply> feedReplyList = new ArrayList<>();
+
 
 //    @Column(nullable = false)
     private int likeCount;

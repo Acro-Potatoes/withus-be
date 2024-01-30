@@ -112,10 +112,8 @@ public class FeedDto {
         private LocalDateTime replyDate;
 
         public FeedRelyResponse(FeedReply feedReply) {
-            this.feedId = feedId;
             this.content = content;
             this.replyWriter = replyWriter;
-            this.replyDate = replyDate;
         }
     }
 

@@ -28,7 +28,7 @@ public class FeedReply {
     private String replyWriter;
 
     @CreationTimestamp
-    @Column(name = "reply_date", nullable = false)
+    @Column(name = "reply_date")
     private LocalDateTime replyDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,7 +36,7 @@ public class FeedReply {
     private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id") // FK
+    @JoinColumn(name = "id") // FK
     private Member member;
 
 

@@ -18,12 +18,12 @@ public class FeedLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long like_id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id", insertable = false,nullable = false)
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id",nullable = false)
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id", insertable = false,nullable = false)
+    @JoinColumn(name = "feed_id",nullable = false)
     private Feed feed;
 
 }

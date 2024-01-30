@@ -6,6 +6,9 @@ import com.withus.be.domain.constant.Provider;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Builder
@@ -39,5 +42,16 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
+
+    @OneToMany(mappedBy = "member")
+    private List<Feed> feeds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<FeedReply> feedReplyList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<FeedLike> feedLikes = new ArrayList<>();
+
+
 
 }
