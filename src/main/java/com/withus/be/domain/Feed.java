@@ -1,5 +1,6 @@
 package com.withus.be.domain;
 
+import com.withus.be.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of={"feed_id"})
 @Entity
 @Table(name = "feed")
-public class Feed {
+public class Feed extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +38,11 @@ public class Feed {
 
     //좋아요 누른 멤버에 대한 리스트 필요
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @CreationTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+//    @CreationTimestamp
+//    @Column(name = "created_at", updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @CreationTimestamp
+//    @Column(name = "updated_at")
+//    private LocalDateTime updatedAt;
 }

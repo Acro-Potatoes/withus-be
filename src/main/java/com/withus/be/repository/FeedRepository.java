@@ -10,11 +10,11 @@ import java.util.List;
 public interface FeedRepository extends JpaRepository<Feed,Long > {
 
     //날짜별로 내림차순 정렬(최신순 정렬)
-    @Query("SELECT f FROM Feed f ORDER BY f.createdAt DESC")
+    @Query("SELECT f FROM Feed f ORDER BY f.createdDate DESC")
     List<Feed> findByDate();
 
     //키워드 검색
-    @Query("SELECT f FROM Feed f WHERE f.title LIKE %:keyword% OR f.content LIKE %:keyword% ORDER BY f.createdAt DESC" )
+    @Query("SELECT f FROM Feed f WHERE f.title LIKE %:keyword% OR f.content LIKE %:keyword% ORDER BY f.createdDate DESC" )
     List<Feed> findByKeyword(@Param("keyword") String keyword);
 
 
