@@ -26,31 +26,21 @@ public class FeedReplyService {
     private final MemberRepository memberRepository;
 
 
-    public List<FeedRelyResponse> getList(final Long replyId) {
+    public List<FeedRelyResponse> getList(Long replyId) {
         List<FeedReply> replyList = feedReplyRepository.findAllById(Collections.singleton(replyId));
-
 
         List<FeedRelyResponse> replyDtoList = replyList.stream()
                 .map(FeedRelyResponse::new)
                 .collect(Collectors.toList());
-//        List<FeedRelyResponse> replyDtoList = ;
-
-//        return replyList.stream().map(FeedRelyResponse::of).collect(Collectors.toList());
+        System.out.println(replyDtoList);
         return replyDtoList;
     }
 
     public void writeReply(FeedReplyInsertRequest dto) {
-        //토큰관련 처리 필요
-//        Long memberId = Long.valueOf(Member)
-//        Member member = memberRepository.findById(memberId);
-
-//        Feed feed = feedRepository.findById()
-
         FeedReply feedReply = FeedReplyInsertRequest.builder().feedId(dto.getFeedId())
                 .content(dto.getContent())
+                .replyWriter(dto.getReplyWriter())
                 .build().toEntity();
-
-//        feedRepository.save(feed);
         feedReplyRepository.save(feedReply);
     }
 

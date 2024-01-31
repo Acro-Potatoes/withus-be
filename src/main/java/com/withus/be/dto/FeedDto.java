@@ -108,12 +108,10 @@ public class FeedDto {
         private String content;
         private String replyWriter;
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDateTime replyDate;
-
         public FeedRelyResponse(FeedReply feedReply) {
-            this.content = content;
-            this.replyWriter = replyWriter;
+            this.content = feedReply.getReplyContent();
+            this.replyWriter = feedReply.getReplyWriter();
+            this.feedId = feedReply.getReplyId();
         }
     }
 
@@ -132,8 +130,6 @@ public class FeedDto {
         private String content;
         private String replyWriter;
 
-//        @JsonFormat(pattern = "yyyy-MM-dd")
-//        private LocalDateTime replyDate;
 
         public FeedReply toEntity() {
             return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)

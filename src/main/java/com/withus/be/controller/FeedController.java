@@ -5,11 +5,9 @@ import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
 import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedService;
-import com.withus.be.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +27,7 @@ public class FeedController {
     public ResponseEntity<?> list(){
         log.info("/withus/list");
         List<FeedResponse> feedResponses = feedService.getList();
+        System.out.println(feedResponses);
         return ResponseEntity.ok().body(feedResponses);
     }
 
@@ -71,11 +70,9 @@ public class FeedController {
 
     //피드 삭제
     @DeleteMapping(value = "/delete/{feedId}")
-    public ResponseEntity<?> delete(@PathVariable Long feedId){
+    public ResponseEntity<?> delete(@PathVariable("feedId") Long feedId){
         log.info("/withus/delete - 피드 삭제{}",feedId);
-
         feedService.delete(feedId);
-
         return ResponseEntity.ok().body("삭제 성공!!");
     }
 
@@ -89,7 +86,7 @@ public class FeedController {
 
     @PostMapping("/like/{feedId}")
     public ResponseEntity<?> handleLike(
-            @PathVariable Long feedId
+            @PathVariable("feedId") Long feedId
     ){
 //        log.info("like click : memberId = {}, feedId = {}", ,feedId);
         boolean isLiked = feedLikeService.checkIfLiked(feedId);

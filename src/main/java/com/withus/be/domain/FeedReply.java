@@ -1,5 +1,6 @@
 package com.withus.be.domain;
 
+import com.withus.be.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,13 +9,13 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString(exclude = {"feed","member"})
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "feed_reply")
-public class FeedReply {
+public class FeedReply extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +25,8 @@ public class FeedReply {
     @Column(name = "reply_content", nullable = false, length = 1000)
     private String replyContent;
 
-    @Column(name = "reply_writer", nullable = false, length = 10)
+    @Column(name = "reply_writer", length = 10)
     private String replyWriter;
-
-    @CreationTimestamp
-    @Column(name = "reply_date")
-    private LocalDateTime replyDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id") // FK
@@ -38,8 +35,4 @@ public class FeedReply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id") // FK
     private Member member;
-
-
-
-
 }

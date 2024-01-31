@@ -20,7 +20,7 @@ public class FeedReplyController {
     private final FeedReplyService feedReplyService;
 
     @GetMapping("/{replyId}")
-    public ResponseEntity<?> list(@PathVariable Long replyId){
+    public ResponseEntity<?> list(@PathVariable("replyId") Long replyId){
         log.info("/feeds/reply/{} - 댓글 전체 보기", replyId );
 
         List<FeedRelyResponse> list = feedReplyService.getList(replyId);
@@ -35,9 +35,7 @@ public class FeedReplyController {
         log.info("/feeds/reply/write - {}번 피드에 '{}' 댓글 작성", dto.getFeedId(), dto.getContent());
 
         feedReplyService.writeReply(dto);
-        List<FeedRelyResponse> list = feedReplyService.getList(dto.getFeedId());
-
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok("댓글 작성 완료!!");
     }
 
     @DeleteMapping("/delete/{replyId}")
