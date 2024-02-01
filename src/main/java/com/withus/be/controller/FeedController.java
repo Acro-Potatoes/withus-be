@@ -1,11 +1,14 @@
 package com.withus.be.controller;
 
 import com.withus.be.common.response.ResponseSuccess;
+import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
+import com.withus.be.repository.MemberRepository;
 import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedService;
+import com.withus.be.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -23,6 +27,7 @@ public class FeedController {
 
     private final FeedService feedService;
     private final FeedLikeService feedLikeService;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/list")
     public ResponseEntity<?> list(){
@@ -89,7 +94,7 @@ public class FeedController {
     public ResponseEntity<?> handleLike(
             @PathVariable("feedId") Long feedId
     ){
-//        log.info("like click : memberId = {}, feedId = {}", ,feedId);
+        log.info("like click : {}번 피드 좋아요 누름!",feedId);
         boolean isLiked = feedLikeService.checkIfLiked(feedId);
         feedLikeService.handleLike(feedId);
         System.out.println("isLiked =  "+ isLiked);
