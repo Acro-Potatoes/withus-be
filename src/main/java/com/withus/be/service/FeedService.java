@@ -2,15 +2,12 @@ package com.withus.be.service;
 
 import com.withus.be.common.auth.jwt.JwtTokenValidator;
 import com.withus.be.common.exception.EntityNotFoundException;
-import com.withus.be.common.exception.InvalidTokenException;
 import com.withus.be.domain.Feed;
-import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
 import com.withus.be.repository.FeedRepository;
 import com.withus.be.repository.MemberRepository;
-import com.withus.be.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +45,9 @@ public class FeedService {
     //피드 키워드 검색
     public List<FeedResponse> getKeyword(String keyword) {
         List<Feed> feeds = feedRepository.findByKeyword(keyword);
+        if (feeds.isEmpty()){
+            throw new EntityNotFoundException(keyword +"이란 단어 없음!");
+        }
         return feeds.stream().map(FeedResponse::of).collect(Collectors.toList());
     }
 
@@ -60,25 +60,23 @@ public class FeedService {
 
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
-        Optional<Feed> optionalFeed = feedRepository.findById(dto.getFeedId());
-        Feed feed = optionalFeed.orElseThrow();
+        Optional<Feed> optionalFeed = Optional.ofNullable(feedRepository.findById(dto.getFeedId()).orElseThrow(() -> new EntityNotFoundException("피드 없음!!")));
+        Feed feed = optionalFeed.get();
 
         feed.setTitle(dto.getTitle());
         feed.setContent(dto.getContent());
-
         feedRepository.save(feed);
-
         return getList();
     }
 
     //피드 삭제
-    public void delete(Long id) {
-        Feed feeds = feedRepository.findById(id).orElseThrow();
+    public void delete(Long feedId) {
+        Feed feeds = feedRepository.findById(feedId).orElseThrow(()->new EntityNotFoundException("피드가 존재하지 않음"));
         feedRepository.delete(feeds);
     }
 
 
     public Feed getFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException( feedId +"번 게시물이 존재하지 않습니다."));
+        return feedRepository.findById(feedId).orElseThrow(() -> new EntityNotFoundException( feedId +"번 게시물이 존재하지 않습니다."));
     }
 }

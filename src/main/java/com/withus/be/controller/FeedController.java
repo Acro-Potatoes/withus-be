@@ -1,5 +1,6 @@
 package com.withus.be.controller;
 
+import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
@@ -7,13 +8,11 @@ import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -29,8 +28,7 @@ public class FeedController {
     public ResponseEntity<?> list(){
         log.info("/withus/list");
         List<FeedResponse> feedResponses = feedService.getList();
-        System.out.println(feedResponses);
-        return ResponseEntity.ok().body(feedResponses);
+        return new ResponseSuccess().success(feedResponses);
     }
 
     //최신순으로 피드 조회
@@ -38,7 +36,7 @@ public class FeedController {
     public ResponseEntity<?> listDesc(){
         log.info("/withus/listdesc");
         List<FeedResponse> feedResponses = feedService.getListDateDesc();
-        return ResponseEntity.ok().body(feedResponses);
+        return new ResponseSuccess().success(feedResponses);
     }
 
     //키워드 검색
@@ -46,7 +44,8 @@ public class FeedController {
     public ResponseEntity<?> keywordList(@RequestParam("keyword") String keyword){
         log.info("/withus/search?keyword ={}",keyword);
         List<FeedResponse> feedResponses = feedService.getKeyword(keyword);
-        return ResponseEntity.ok().body(feedResponses);
+        return new ResponseSuccess().success(feedResponses);
+
     }
 
     //피드 생성
@@ -56,7 +55,7 @@ public class FeedController {
         log.info("POST: /withus/write - 피드 생성 {}", request);
         //에러처리 필요
         List<FeedResponse> feedResponse = feedService.write(request);
-        return ResponseEntity.ok().body(feedResponse);
+        return new ResponseSuccess().success(feedResponse);
     }
 
     //피드 수정
@@ -67,7 +66,7 @@ public class FeedController {
         log.info("/withus/modify - 피드 수정{}",dto);
 
         List<FeedResponse> responseDTO = feedService.modify(dto);
-        return ResponseEntity.ok().body(responseDTO);
+        return new ResponseSuccess().success(responseDTO);
     }
 
     //피드 삭제
@@ -75,7 +74,7 @@ public class FeedController {
     public ResponseEntity<?> delete(@PathVariable("feedId") Long feedId){
         log.info("/withus/delete - 피드 삭제{}",feedId);
         feedService.delete(feedId);
-        return ResponseEntity.ok().body("삭제 성공!!");
+        return new ResponseSuccess().success("삭제 성공!!");
     }
 
     /**
