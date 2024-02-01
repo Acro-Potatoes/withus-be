@@ -39,17 +39,13 @@ public class Feed extends BaseEntity {
     @OneToMany(mappedBy = "feed")
     private List<FeedReply> feedReplyList = new ArrayList<>();
 
-
-//    @Column(nullable = false)
+    //Like
+    @Column(nullable = false)
     private int likeCount;
 
-    //좋아요 누른 멤버에 대한 리스트 필요
+    //좋아요 누른 멤버 리스트
+    @OneToMany(mappedBy = "feed",orphanRemoval = true)
+    @Builder.Default //특정 필드를 특정값으로 초기화
+    private List<FeedLike> likes = new ArrayList<>();
 
-//    @CreationTimestamp
-//    @Column(name = "created_at", updatable = false)
-//    private LocalDateTime createdAt;
-//
-//    @CreationTimestamp
-//    @Column(name = "updated_at")
-//    private LocalDateTime updatedAt;
 }
