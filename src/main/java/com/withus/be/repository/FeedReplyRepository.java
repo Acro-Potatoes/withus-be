@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface FeedReplyRepository extends JpaRepository<FeedReply, Long> {
 
-//    List<FeedReply> findAllById(Long replyId);
-
+    List<FeedReply> findByFeedFeedId(Long feedId);
 }

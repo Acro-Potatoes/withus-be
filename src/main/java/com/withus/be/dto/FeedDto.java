@@ -3,6 +3,7 @@ package com.withus.be.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.withus.be.domain.Feed;
 import com.withus.be.domain.FeedReply;
+import com.withus.be.domain.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -60,6 +61,7 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
+
         public Feed toEntity() {
             return Feed.builder()
                     .content(this.content)
@@ -104,15 +106,20 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedRelyResponse{
 
-        private Long feedId;
-        private String content;
+        private Long replyId;
+        private String replyContent;
         private String replyWriter;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDateTime createdDate;
 
         public FeedRelyResponse(FeedReply feedReply) {
-            this.content = feedReply.getReplyContent();
+            this.replyId = feedReply.getReplyId();
+            this.createdDate = feedReply.getCreatedDate();
+            this.replyContent = feedReply.getReplyContent();
             this.replyWriter = feedReply.getReplyWriter();
-            this.feedId = feedReply.getReplyId();
         }
+
+
     }
 
 
@@ -126,13 +133,18 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyInsertRequest{
 
-        private Long feedId;
-        private String content;
-        private String replyWriter;
+        private Long feedId; //피드 번호
+
+        @NotBlank
+        @Size(min = 1, max = 1000)
+        private String replyContent;
 
 
-        public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)
+        public FeedReply toEntity(Member member, Feed feed) {
+            return FeedReply.builder().replyContent(this.replyContent)
+                    .feed(feed)
+                    .replyWriter(member.getNickname())
+                    .member(member)
                     .build();
         }
 
@@ -147,15 +159,17 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyModifyRequest{
 
-        private Long feedId;
-        private String content;
-        private String replyWriter;
+        @NotNull
+        private Long replyId;
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDateTime replyDate;
+        private String replyContent;
+//        private String nickname;
+
+//        @JsonFormat(pattern = "yyyy-MM-dd")
+//        private LocalDateTime replyDate;
 
         public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)
+            return FeedReply.builder().replyContent(this.replyContent)
                     .build();
         }
 

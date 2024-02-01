@@ -1,6 +1,9 @@
 package com.withus.be.service;
 
+import com.withus.be.common.exception.EntityNotFoundException;
+import com.withus.be.domain.Feed;
 import com.withus.be.domain.FeedReply;
+import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
@@ -26,32 +29,32 @@ public class FeedReplyService {
     private final MemberRepository memberRepository;
 
 
-    public List<FeedRelyResponse> getList(Long replyId) {
-        List<FeedReply> replyList = feedReplyRepository.findAllById(Collections.singleton(replyId));
+    public List<FeedRelyResponse> getList(Long feedId) {
+        List<FeedReply> replyList = feedReplyRepository.findByFeedFeedId(feedId);
 
         List<FeedRelyResponse> replyDtoList = replyList.stream()
                 .map(FeedRelyResponse::new)
                 .collect(Collectors.toList());
-        System.out.println(replyDtoList);
         return replyDtoList;
     }
 
-    public void writeReply(FeedReplyInsertRequest dto) {
+    public void writeReply(FeedReplyInsertRequest dto, Member member) {
+        Feed feed = feedRepository.findById(dto.getFeedId()).orElseThrow(() -> new EntityNotFoundException());
+
         FeedReply feedReply = FeedReplyInsertRequest.builder().feedId(dto.getFeedId())
-                .content(dto.getContent())
-                .replyWriter(dto.getReplyWriter())
-                .build().toEntity();
+                .replyContent(dto.getReplyContent())
+                .build().toEntity(member, feed);
         feedReplyRepository.save(feedReply);
     }
 
     public String modify(FeedReplyModifyRequest dto) {
-        Optional<FeedReply> feedReply = feedReplyRepository.findById(dto.getFeedId());
-        FeedReply feedReply1 = feedReply.orElseThrow();
-
-        feedReply1.setReplyContent(dto.getContent());
-        feedReplyRepository.save(feedReply1);
-
-        return "성공";
+        Optional<FeedReply> replyOptional = feedReplyRepository.findById(dto.getReplyId());
+        if (replyOptional.isPresent()){
+            FeedReply feedReply = replyOptional.get();
+            feedReply.setReplyContent(dto.getReplyContent());
+            feedReplyRepository.save(feedReply);
+            return "성공";
+        }else return "실패";
     }
 
     public void delete(Long replyId) {

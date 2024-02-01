@@ -7,11 +7,13 @@ import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -50,9 +52,9 @@ public class FeedController {
     //피드 생성
     @PostMapping("/write") //List로 반환하는게 맞는지 확인
     public ResponseEntity<?> write(@Validated @RequestBody FeedsWriteRequest request){
+
         log.info("POST: /withus/write - 피드 생성 {}", request);
         //에러처리 필요
-
         List<FeedResponse> feedResponse = feedService.write(request);
         return ResponseEntity.ok().body(feedResponse);
     }

@@ -3,8 +3,6 @@ package com.withus.be.domain;
 import com.withus.be.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -25,7 +23,7 @@ public class FeedReply extends BaseEntity {
     @Column(name = "reply_content", nullable = false, length = 1000)
     private String replyContent;
 
-    @Column(name = "reply_writer", length = 10)
+    @Column(name = "reply_writer", nullable = false ,length = 10)
     private String replyWriter;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,6 +31,6 @@ public class FeedReply extends BaseEntity {
     private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id") // FK
+    @JoinColumn(name = "email") // FK
     private Member member;
 }
