@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,11 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class FeedService {
-
-//    private SecurityUtil securityUtil;
-    private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
-    private final JwtTokenValidator validator;
 
 
     //리스트 가져오기
@@ -60,9 +55,7 @@ public class FeedService {
 
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
-        Optional<Feed> optionalFeed = Optional.ofNullable(feedRepository.findById(dto.getFeedId()).orElseThrow(() -> new EntityNotFoundException("피드 없음!!")));
-        Feed feed = optionalFeed.get();
-
+        Feed feed = feedRepository.findById(dto.getFeedId()).orElseThrow(() -> new EntityNotFoundException("피드 없음!!"));
         feed.setTitle(dto.getTitle());
         feed.setContent(dto.getContent());
         feedRepository.save(feed);

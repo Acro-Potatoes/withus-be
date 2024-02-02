@@ -14,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +37,7 @@ public class FeedReplyService {
     }
 
     public void writeReply(FeedReplyInsertRequest dto, Member member) {
-        Feed feed = feedRepository.findById(dto.getFeedId()).orElseThrow(() -> new EntityNotFoundException());
+        Feed feed = feedRepository.findById(dto.getFeedId()).orElseThrow(EntityNotFoundException::new);
 
         FeedReply feedReply = FeedReplyInsertRequest.builder().feedId(dto.getFeedId())
                 .replyContent(dto.getReplyContent())
@@ -48,13 +46,10 @@ public class FeedReplyService {
     }
 
     public String modify(FeedReplyModifyRequest dto) {
-        Optional<FeedReply> replyOptional = feedReplyRepository.findById(dto.getReplyId());
-        if (replyOptional.isPresent()){
-            FeedReply feedReply = replyOptional.get();
-            feedReply.setReplyContent(dto.getReplyContent());
-            feedReplyRepository.save(feedReply);
-            return "성공";
-        }else return "실패";
+        FeedReply feedReply = feedReplyRepository.findById(dto.getReplyId()).orElseThrow(EntityNotFoundException::new);
+        feedReply.setReplyContent(dto.getReplyContent());
+        feedReplyRepository.save(feedReply);
+        return "성공";
     }
 
     public void delete(Long replyId) {

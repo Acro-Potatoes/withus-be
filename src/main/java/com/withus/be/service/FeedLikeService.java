@@ -26,20 +26,15 @@ public class FeedLikeService {
 
     public void handleLike(Long feedId){
 
-        Optional<String> currentEmail = SecurityUtil.getCurrentEmail();
-        if (currentEmail.isPresent()) {
-            Optional<Member> memberOptional = memberRepository.findByEmail(currentEmail.get());
-            if (memberOptional.isPresent()) {
-                Member member = memberOptional.get();
+        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
 
-            }
-        }
         Feed feed = feedService.getFeed(feedId);
         FeedLike feedLike = feedLikeRepository.findByFeed(feed);
 
         if(feedLike == null){
             feedLike = FeedLike.builder()
-//                    .member(member)
+                    .member(member)
                     .feed(feed)
                     .build();
             feedLikeRepository.save(feedLike);
@@ -58,16 +53,16 @@ public class FeedLikeService {
     }
 
     public boolean checkIfLiked(Long feedId) {
-        Optional<Member> member = memberRepository.findByEmail(SecurityUtil.getCurrentEmail().get());
-        if(member.isPresent()){
-            FeedLike feedLike = feedLikeRepository.findByMemberAndFeed();
-            System.out.println("좋아요 여부 = " + feedLike);
-            // feedLike가 null이 아니라면 좋아요 선택
-            System.out.println(feedLike != null);
-            return feedLike != null;
-        }else{
-            return false;
-        }
+        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
+        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
+
+        FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(member,feed);
+        System.out.println("좋아요 여부 = " + feedLike);
+
+        // feedLike가 null이 아니라면 좋아요 선택
+        System.out.println(feedLike != null);
+        return feedLike != null;
 
     }
 }

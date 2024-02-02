@@ -1,5 +1,6 @@
 package com.withus.be.controller;
 
+import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseFail;
 import com.withus.be.common.response.ResponseSuccess;
@@ -15,8 +16,8 @@ import com.withus.be.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -50,17 +51,12 @@ public class FeedReplyController {
     public ResponseEntity<Body> writeReply(
             @RequestBody FeedReplyInsertRequest dto
     ) {
-        Optional<String> currentEmail = SecurityUtil.getCurrentEmail();
-        if (currentEmail.isPresent()) {
-            Optional<Member> memberOptional = memberRepository.findByEmail(currentEmail.get());
-            if (memberOptional.isPresent()) {
-                Member member = memberOptional.get();
-                log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getFeedId(), dto.getReplyContent());
-                feedReplyService.writeReply(dto, member);
-            }
-        } else {
-            return new ResponseFail(NOT_FOUND).fail();
-        }
+        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
+
+       log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getFeedId(), dto.getReplyContent());
+       feedReplyService.writeReply(dto, member);
+
         return new ResponseSuccess().success("댓글 작성 완료 !!");
     }
 
@@ -74,16 +70,10 @@ public class FeedReplyController {
     }
 
     @PatchMapping("/modify")
-    public ResponseEntity<?> modifyReply(@RequestBody FeedReplyModifyRequest dto) {
-
-        Optional<String> currentEmail = SecurityUtil.getCurrentEmail();
-        if (currentEmail.isPresent()) {
-            String message = feedReplyService.modify(dto);
-            log.info("feeds/reply/modify/{} - 피드 댓글 수정 내용: {}", dto.getReplyId(),dto.getReplyContent());
-            return new ResponseSuccess().success(message);
-        } else {
-            return new ResponseFail(NOT_FOUND).fail();
-        }
+    public ResponseEntity<?> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
+        String message = feedReplyService.modify(dto);
+        log.info("feeds/reply/modify/{} - 피드 댓글 수정 내용: {}", dto.getReplyId(),dto.getReplyContent());
+        return new ResponseSuccess().success(message);
     }
 
 }

@@ -6,7 +6,7 @@ import lombok.*;
 
 @Setter
 @Getter
-@ToString(exclude = {"feed","member"})
+//@ToString(exclude = {"feed","member"})
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor

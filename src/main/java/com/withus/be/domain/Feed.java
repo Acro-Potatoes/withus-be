@@ -33,14 +33,16 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "email")
     private  Member member;
 
-    @OneToMany(mappedBy = "feed")
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @Builder.Default
     private List<FeedLike> feedLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "feed")
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @Builder.Default
     private List<FeedReply> feedReplyList = new ArrayList<>();
 
     //Like
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private int likeCount;
 
     //좋아요 누른 멤버 리스트
