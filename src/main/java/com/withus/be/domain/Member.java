@@ -33,6 +33,9 @@ public class Member extends BaseEntity {
     @Column(length = 20)
     private String nickname;
 
+    @Column(length = 20, unique = true)
+    private String phoneNum;
+
     private String profileImage;
 
     private boolean activated;
@@ -52,6 +55,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<FeedLike> feedLikes = new ArrayList<>();
 
-
+    public void changePassword(String password) {
+        this.password = password;
+    }
 
 }

@@ -21,23 +21,18 @@ public class MemberDto {
         @NotNull
         @Size(min = 3, max = 50)
         private String email;
-
         @NotNull
         @Size(min = 3, max = 100)
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         private String password;
-
         @NotNull
         @Size(min = 3, max = 50)
         private String name;
-
         private String nickname;
-
+        private String phoneNum;
         private String profileImage;
-
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private Authority authority;
-
 
         public static Member from(MemberRequest memberRequest, String password, String profileUrl) {
             if (memberRequest == null) return null;
@@ -47,6 +42,7 @@ public class MemberDto {
                     .password(password)
                     .name(memberRequest.getName())
                     .nickname(memberRequest.getNickname())
+                    .phoneNum(memberRequest.getPhoneNum())
                     .profileImage(
                             memberRequest.getProfileImage() == null || memberRequest.getProfileImage().isEmpty()
                                     ? profileUrl : memberRequest.getProfileImage()
@@ -63,6 +59,7 @@ public class MemberDto {
                     .password(password)
                     .name(name)
                     .nickname("")
+                    .phoneNum("")
                     .profileImage(image)
                     .activated(true)
                     .authority(Authority.ROLE_USER)
@@ -80,6 +77,7 @@ public class MemberDto {
         private String name;
         private String email;
         private String nickname;
+        private String phoneNum;
         private String profileImage;
         private boolean activated;
         private Authority authority;
@@ -91,6 +89,7 @@ public class MemberDto {
                     .name(member.getName())
                     .email(member.getEmail())
                     .nickname(member.getNickname())
+                    .phoneNum(member.getPhoneNum())
                     .profileImage(member.getProfileImage())
                     .activated(member.isActivated())
                     .authority(member.getAuthority())
@@ -98,4 +97,40 @@ public class MemberDto {
                     .build();
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PasswordRequest {
+        private String email;;
+        private String newPassword;
+        private String newPasswordRe;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PhoneNumRequest {
+        @NotNull
+        private String phoneNum;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PhoneNumCertRequest {
+        @NotNull
+        private String phoneNum;
+        @NotNull
+        private String certNum;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PhoneNumCertResponse {
+        private String email;
+        private String msg;
+    }
+
 }

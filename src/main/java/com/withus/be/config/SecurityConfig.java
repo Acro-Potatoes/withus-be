@@ -36,7 +36,7 @@ public class SecurityConfig {
 
     private static final String[] AUTH_LIST_URL = {
             "/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup", "/auth/cert-mail",
-            "/auth/cert-mail/confirm"
+            "/auth/cert-mail/confirm", "/auth/pwd", "/auth/cert-pnum", "/auth/cert-pnum/confirm"
     };
 
     @Bean
