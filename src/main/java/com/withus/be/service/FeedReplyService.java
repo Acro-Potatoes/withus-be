@@ -24,29 +24,26 @@ public class FeedReplyService {
 
     private final FeedReplyRepository feedReplyRepository;
     private final FeedRepository feedRepository;
-    private final MemberRepository memberRepository;
-
 
     public List<FeedRelyResponse> getList(Long feedId) {
-        List<FeedReply> replyList = feedReplyRepository.findByFeedFeedId(feedId);
+        List<FeedReply> replyList = feedReplyRepository.findByFeedId(feedId);
 
-        List<FeedRelyResponse> replyDtoList = replyList.stream()
+        return replyList.stream()
                 .map(FeedRelyResponse::new)
                 .collect(Collectors.toList());
-        return replyDtoList;
     }
 
     public void writeReply(FeedReplyInsertRequest dto, Member member) {
-        Feed feed = feedRepository.findById(dto.getFeedId()).orElseThrow(EntityNotFoundException::new);
+        Feed feed = feedRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
 
-        FeedReply feedReply = FeedReplyInsertRequest.builder().feedId(dto.getFeedId())
+        FeedReply feedReply = FeedReplyInsertRequest.builder().id(dto.getId())
                 .replyContent(dto.getReplyContent())
                 .build().toEntity(member, feed);
         feedReplyRepository.save(feedReply);
     }
 
     public String modify(FeedReplyModifyRequest dto) {
-        FeedReply feedReply = feedReplyRepository.findById(dto.getReplyId()).orElseThrow(EntityNotFoundException::new);
+        FeedReply feedReply = feedReplyRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
         feedReply.setReplyContent(dto.getReplyContent());
         feedReplyRepository.save(feedReply);
         return "성공";

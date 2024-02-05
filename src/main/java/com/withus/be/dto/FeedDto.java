@@ -23,7 +23,7 @@ public class FeedDto {
     public static class FeedResponse{
 
         private int count;
-        private Long feedId;
+        private Long id;
 
         private String title;
 
@@ -37,7 +37,7 @@ public class FeedDto {
 
         public static FeedResponse of(Feed feed){
             return FeedResponse.builder()
-                    .feedId(feed.getFeedId())
+                    .id(feed.getId())
                     .title(feed.getTitle())
                     .content(feed.getContent())
                     .created_at(feed.getCreatedDate())
@@ -78,7 +78,7 @@ public class FeedDto {
     public  static class FeedModifyRequest{
 
         @NotNull
-        private Long feedId;
+        private Long id;
 
         @Size(min = 1, max = 100)
         private String title;
@@ -106,14 +106,14 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedRelyResponse{
 
-        private Long replyId;
+        private Long id;
         private String replyContent;
         private String replyWriter;
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime createdDate;
 
         public FeedRelyResponse(FeedReply feedReply) {
-            this.replyId = feedReply.getReplyId();
+            this.id = feedReply.getId();
             this.createdDate = feedReply.getCreatedDate();
             this.replyContent = feedReply.getReplyContent();
             this.replyWriter = feedReply.getReplyWriter();
@@ -133,7 +133,7 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyInsertRequest{
 
-        private Long feedId; //피드 번호
+        private Long id; //피드 번호
 
         @NotBlank
         @Size(min = 1, max = 1000)
@@ -160,7 +160,7 @@ public class FeedDto {
     public  static class FeedReplyModifyRequest{
 
         @NotNull
-        private Long replyId;
+        private Long id;
 
         private String replyContent;
 //        private String nickname;

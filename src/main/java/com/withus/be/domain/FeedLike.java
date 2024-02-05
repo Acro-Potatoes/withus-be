@@ -16,7 +16,8 @@ public class FeedLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long like_id;
+    @Column(insertable=false, updatable=false)
+    private  Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email",nullable = false)

@@ -20,8 +20,7 @@ public class Feed extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feed_id")
-    private Long feedId;
+    private Long id;
 
     @Column(length = 100, nullable = false)
     private String title;

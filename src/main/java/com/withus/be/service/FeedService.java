@@ -1,13 +1,11 @@
 package com.withus.be.service;
 
-import com.withus.be.common.auth.jwt.JwtTokenValidator;
 import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.domain.Feed;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
 import com.withus.be.repository.FeedRepository;
-import com.withus.be.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +53,7 @@ public class FeedService {
 
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
-        Feed feed = feedRepository.findById(dto.getFeedId()).orElseThrow(() -> new EntityNotFoundException("피드 없음!!"));
+        Feed feed = feedRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException("피드 없음!!"));
         feed.setTitle(dto.getTitle());
         feed.setContent(dto.getContent());
         feedRepository.save(feed);

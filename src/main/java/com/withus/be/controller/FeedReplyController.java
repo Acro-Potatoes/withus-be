@@ -33,8 +33,8 @@ public class FeedReplyController {
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
 
-    @GetMapping("/{feedId}")
-    public ResponseEntity<?> list(@PathVariable("feedId") Long feedId) {
+    @GetMapping("/{Id}")
+    public ResponseEntity<?> list(@PathVariable("Id") Long feedId) {
 
         Optional<Feed> feedOptional = feedRepository.findById(feedId);
         if (feedOptional.isPresent()){
@@ -54,15 +54,15 @@ public class FeedReplyController {
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
 
-       log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getFeedId(), dto.getReplyContent());
+       log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getId(), dto.getReplyContent());
        feedReplyService.writeReply(dto, member);
 
         return new ResponseSuccess().success("댓글 작성 완료 !!");
     }
 
-    @DeleteMapping("/delete/{replyId}")
+    @DeleteMapping("/delete/{Id}")
     public ResponseEntity<?> deleteReply(
-            @PathVariable("replyId") Long replyId
+            @PathVariable("Id") Long replyId
     ) {
         log.info("DELETE : feeds/reply/delete/ {}번댓글 삭제", replyId);
         feedReplyService.delete(replyId);
@@ -72,7 +72,7 @@ public class FeedReplyController {
     @PatchMapping("/modify")
     public ResponseEntity<?> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
         String message = feedReplyService.modify(dto);
-        log.info("feeds/reply/modify/{} - 피드 댓글 수정 내용: {}", dto.getReplyId(),dto.getReplyContent());
+        log.info("feeds/reply/modify/{} - 피드 댓글 수정 내용: {}", dto.getId(),dto.getReplyContent());
         return new ResponseSuccess().success(message);
     }
 

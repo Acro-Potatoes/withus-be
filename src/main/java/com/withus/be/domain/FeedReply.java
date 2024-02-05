@@ -17,8 +17,7 @@ public class FeedReply extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reply_id")
-    private Long replyId;
+    private Long id;
 
     @Column(name = "reply_content", nullable = false, length = 1000)
     private String replyContent;
