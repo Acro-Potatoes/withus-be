@@ -39,7 +39,7 @@ public class MemberDto {
         private Authority authority;
 
 
-        public static Member from(MemberRequest memberRequest, String password) {
+        public static Member from(MemberRequest memberRequest, String password, String profileUrl) {
             if (memberRequest == null) return null;
 
             return Member.builder()
@@ -47,9 +47,9 @@ public class MemberDto {
                     .password(password)
                     .name(memberRequest.getName())
                     .nickname(memberRequest.getNickname())
-                    .profileImage( // TODO 있으면 넣고 없으면 기본 이미지 넣기(S3에 default image 있음)
+                    .profileImage(
                             memberRequest.getProfileImage() == null || memberRequest.getProfileImage().isEmpty()
-                                    ? "" : memberRequest.getProfileImage()
+                                    ? profileUrl : memberRequest.getProfileImage()
                     )
                     .activated(true)
                     .authority(Authority.ROLE_USER)
