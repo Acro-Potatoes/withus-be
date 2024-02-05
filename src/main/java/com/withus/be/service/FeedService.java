@@ -2,10 +2,13 @@ package com.withus.be.service;
 
 import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.domain.Feed;
+import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
 import com.withus.be.repository.FeedRepository;
+import com.withus.be.repository.MemberRepository;
+import com.withus.be.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class FeedService {
     private final FeedRepository feedRepository;
+    private  final MemberRepository memberRepository;
 
 
     //리스트 가져오기
@@ -46,8 +50,9 @@ public class FeedService {
 
     //피드 생성
     public List<FeedResponse> write(FeedsWriteRequest request) {
-        //멤버넣기
-        feedRepository.save(request.toEntity());
+        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
+        feedRepository.save(request.toEntity(member));
         return getList();
     }
 

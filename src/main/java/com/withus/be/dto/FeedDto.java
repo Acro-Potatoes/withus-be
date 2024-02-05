@@ -62,9 +62,10 @@ public class FeedDto {
         private String content;
 
 
-        public Feed toEntity() {
+        public Feed toEntity(Member member) {
             return Feed.builder()
                     .content(this.content)
+                    .member(member)
                     .title(this.title)
                     .build();
         }

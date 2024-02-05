@@ -41,12 +41,12 @@ public class FeedLikeService {
 
             //좋아요 수 증가
             feed.setLikeCount(feed.getLikeCount() + 1);
-            log.info("멤버가 좋아요 클릭 ->{}", feed.getLikeCount());
+            log.info("멤버 {}가 좋아요 클릭 ->{}", member.getEmail(),feed.getLikeCount());
         }else{
             //좋아요 취소
             feedLikeRepository.delete(feedLike);
-            log.info("멤버가 좋아요 취소 ->{}", feed.getLikeCount());
             feed.setLikeCount(feed.getLikeCount() - 1);
+            log.info("멤버 {}가 좋아요 취소 ->{}", member.getEmail(),feed.getLikeCount());
         }
         feedRepository.save(feed);
 

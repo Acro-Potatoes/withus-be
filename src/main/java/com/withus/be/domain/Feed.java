@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 //@ToString(exclude = {"member"})
 @NoArgsConstructor
-@EqualsAndHashCode(of={"feed_id"})
 @Entity
 @Table(name = "feed")
 public class Feed extends BaseEntity {
@@ -29,7 +28,7 @@ public class Feed extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email")
+    @JoinColumn(name = "member_id")
     private  Member member;
 
     @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)

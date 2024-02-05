@@ -30,6 +30,6 @@ public class FeedReply extends BaseEntity {
     private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email") // FK
+    @JoinColumn(name = "member_id") // FK
     private Member member;
 }

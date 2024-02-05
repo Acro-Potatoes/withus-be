@@ -94,9 +94,9 @@ public class FeedController {
         System.out.println("isLiked =  "+ isLiked);
 
         if(isLiked){
-            return new ResponseSuccess().success("좋아요 취소");
+            return new ResponseSuccess().success(feedId + "번 피드 좋아요 취소");
         }else{
-            return new ResponseSuccess().success("좋아요 +1");
+            return new ResponseSuccess().success(feedId +"번 피드 좋아요");
         }
     }
 

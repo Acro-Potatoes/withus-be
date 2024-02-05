@@ -20,7 +20,7 @@ public class FeedLike {
     private  Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email",nullable = false)
+    @JoinColumn(name = "member_id",nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
