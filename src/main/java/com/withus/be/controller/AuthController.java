@@ -7,6 +7,8 @@ import com.withus.be.dto.EmailDto;
 import com.withus.be.dto.LoginDto;
 import com.withus.be.dto.MemberDto;
 import com.withus.be.dto.MemberDto.PasswordRequest;
+import com.withus.be.dto.MemberDto.PhoneNumCertRequest;
+import com.withus.be.dto.MemberDto.PhoneNumRequest;
 import com.withus.be.dto.TokenDto;
 import com.withus.be.service.AuthService;
 import com.withus.be.service.MailService;
@@ -59,8 +61,11 @@ public class AuthController {
     @Operation(summary = "Token 재발급", description = "Refresh Token으로 Token 재발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<Body> getRefresh(@RequestBody TokenDto tokenDto) {
-        TokenDto token = jwtTokenProvider.generateTokenByRefreshToken(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-        return getTokenRes(token);
+        return getTokenRes(
+                jwtTokenProvider.generateTokenByRefreshToken(
+                        tokenDto.getAccessToken(),
+                        tokenDto.getRefreshToken())
+        );
     }
 
     private ResponseEntity<Body> getTokenRes(TokenDto token) {
@@ -85,5 +90,17 @@ public class AuthController {
     public ResponseEntity<Body> changePassword(@Valid @RequestBody PasswordRequest passwordRequest) {
         return new ResponseSuccess().success(authService.changePassword(passwordRequest));
     }
-    
+
+    @Operation(summary = "휴대폰 인증 번호 전송")
+    @PostMapping("/cert-pnum")
+    public ResponseEntity<Body> certificationPhoneNum(@Valid @RequestBody PhoneNumRequest phoneNumRequest) {
+        return new ResponseSuccess().success(authService.getCertNum(phoneNumRequest.getPhoneNum()));
+    }
+
+    @Operation(summary = "휴대폰 인증번호 확인")
+    @PostMapping("/cert-pnum/confirm")
+    public ResponseEntity<Body> confirmCertPhoneNum(@Valid @RequestBody PhoneNumCertRequest request) {
+        return new ResponseSuccess().success(authService.confirmCertNum(request.getPhoneNum(), request.getCertNum()));
+    }
+
 }

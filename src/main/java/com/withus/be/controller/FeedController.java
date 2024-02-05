@@ -5,7 +5,6 @@ import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import com.withus.be.dto.FeedDto.FeedResponse;
 import com.withus.be.dto.FeedDto.FeedsWriteRequest;
-import com.withus.be.repository.MemberRepository;
 import com.withus.be.service.FeedLikeService;
 import com.withus.be.service.FeedService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @Slf4j
@@ -47,7 +45,6 @@ public class FeedController {
         log.info("/feeds/search?keyword ={}",keyword);
         List<FeedResponse> feedResponses = feedService.getKeyword(keyword);
         return new ResponseSuccess().success(feedResponses);
-
     }
 
     //피드 생성
@@ -92,13 +89,5 @@ public class FeedController {
             return new ResponseSuccess().success(feedId +"번 피드 좋아요");
         }
     }
-
-
-
-
-
-
-
-
 
 }

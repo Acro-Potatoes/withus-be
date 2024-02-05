@@ -47,8 +47,8 @@ public class MailService {
     }
 
     private MimeMessage createMessage(String email) throws MessagingException, UnsupportedEncodingException {
-        log.info("보내는 대상 : {}", email);
-        log.info("인증 번호 : {}", PK);
+        log.info("Sending destination : {}", email);
+        log.info("Certification Number : {}", PK);
 
         MimeMessage message = javaMailSender.createMimeMessage();
         prepareMessage(message, email);
