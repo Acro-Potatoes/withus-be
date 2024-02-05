@@ -2,7 +2,6 @@ package com.withus.be.controller;
 
 import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.common.response.Response.Body;
-import com.withus.be.common.response.ResponseFail;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.domain.Feed;
 import com.withus.be.domain.Member;
@@ -18,10 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
 
-import static com.withus.be.common.response.Result.NOT_FOUND;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -34,17 +31,15 @@ public class FeedReplyController {
     private final FeedRepository feedRepository;
 
     @GetMapping("/{Id}")
-    public ResponseEntity<?> list(@PathVariable("Id") Long feedId) {
+    public ResponseEntity<Body> list(@PathVariable("Id") Long feedId) {
 
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-        if (feedOptional.isPresent()){
-            List<FeedRelyResponse> list = feedReplyService.getList(feedId);
-            log.info("/feeds/reply/{} - {}번 피드 댓글 전체 보기", feedId,feedId);
+        //해당 피드 있는지 확인
+        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
+        
+        List<FeedRelyResponse> list = feedReplyService.getList(feedId);
+        log.info("/feeds/reply/{} - {}번 피드 댓글 전체 보기", feedId,feedId);
 
-            return new ResponseSuccess().success(list);
-        }else{
-            return new ResponseFail(NOT_FOUND).fail();
-        }
+        return new ResponseSuccess().success(list);
     }
 
     @PostMapping("/write")
@@ -61,7 +56,7 @@ public class FeedReplyController {
     }
 
     @DeleteMapping("/delete/{Id}")
-    public ResponseEntity<?> deleteReply(
+    public ResponseEntity<Body> deleteReply(
             @PathVariable("Id") Long replyId
     ) {
         log.info("DELETE : feeds/reply/delete/ {}번댓글 삭제", replyId);
@@ -70,7 +65,7 @@ public class FeedReplyController {
     }
 
     @PatchMapping("/modify")
-    public ResponseEntity<?> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
+    public ResponseEntity<Body> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
         String message = feedReplyService.modify(dto);
         log.info("feeds/reply/modify/{} - 피드 댓글 수정 내용: {}", dto.getId(),dto.getReplyContent());
         return new ResponseSuccess().success(message);
