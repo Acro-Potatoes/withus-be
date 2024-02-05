@@ -98,4 +98,14 @@ public class MemberDto {
                     .build();
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PasswordRequest {
+        private String email;;
+        private String newPassword;
+        private String newPasswordRe;
+    }
+
 }

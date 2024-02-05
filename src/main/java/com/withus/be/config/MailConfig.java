@@ -30,6 +30,7 @@ public class MailConfig {
         javaMailSender.setUsername(username);
         javaMailSender.setPassword(password);
         javaMailSender.setJavaMailProperties(Objects.requireNonNull(getMailProperties()));
+        javaMailSender.setDefaultEncoding("UTF-8");
         return javaMailSender;
     }
 
@@ -39,7 +40,7 @@ public class MailConfig {
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
         properties.setProperty("mail.debug", "true");
-        properties.setProperty("mail.smtp.ssl.trust", "smtp.naver.com");
+        properties.setProperty("mail.smtp.ssl.trust", host);
         properties.setProperty("mail.smtp.ssl.enable", "true");
         return properties;
     }

@@ -6,6 +6,7 @@ import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.dto.EmailDto;
 import com.withus.be.dto.LoginDto;
 import com.withus.be.dto.MemberDto;
+import com.withus.be.dto.MemberDto.PasswordRequest;
 import com.withus.be.dto.TokenDto;
 import com.withus.be.service.AuthService;
 import com.withus.be.service.MailService;
@@ -79,4 +80,10 @@ public class AuthController {
         return new ResponseSuccess().success(mailService.confirmCertNum(emailDto));
     }
 
+    @Operation(summary = "비밀번호 변경", description = "(미로그인) 비밀번호 찾기 > 비밀번호 변경")
+    @PostMapping("/pwd")
+    public ResponseEntity<Body> changePassword(@Valid @RequestBody PasswordRequest passwordRequest) {
+        return new ResponseSuccess().success(authService.changePassword(passwordRequest));
+    }
+    
 }

@@ -52,6 +52,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<FeedLike> feedLikes = new ArrayList<>();
 
-
+    public void changePassword(String password) {
+        this.password = password;
+    }
 
 }
