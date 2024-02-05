@@ -87,13 +87,6 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
-//        @CreationTimestamp //수정시간(저절로 생성)
-//        private LocalDateTime update_time;
-
-        public Feed toEntity() {
-            return Feed.builder().content(this.content).title(this.title)
-                    .build();
-        }
     }
 
 
@@ -134,7 +127,7 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyInsertRequest{
 
-        private Long id; //피드 번호
+        private Long id;
 
         @NotBlank
         @Size(min = 1, max = 1000)
@@ -164,15 +157,6 @@ public class FeedDto {
         private Long id;
 
         private String replyContent;
-//        private String nickname;
-
-//        @JsonFormat(pattern = "yyyy-MM-dd")
-//        private LocalDateTime replyDate;
-
-        public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.replyContent)
-                    .build();
-        }
 
     }
 

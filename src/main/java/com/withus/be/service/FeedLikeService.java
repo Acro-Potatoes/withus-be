@@ -55,13 +55,11 @@ public class FeedLikeService {
     public boolean checkIfLiked(Long feedId) {
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
-        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
 
+        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
         FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(member,feed);
-        System.out.println("좋아요 여부 = " + feedLike);
 
         // feedLike가 null이 아니라면 좋아요 선택
-        System.out.println(feedLike != null);
         return feedLike != null;
 
     }

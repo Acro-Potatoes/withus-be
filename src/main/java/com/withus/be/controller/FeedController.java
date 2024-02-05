@@ -25,7 +25,6 @@ public class FeedController {
 
     private final FeedService feedService;
     private final FeedLikeService feedLikeService;
-    private final MemberRepository memberRepository;
 
     @GetMapping("/list")
     public ResponseEntity<Body> list(){
@@ -52,7 +51,7 @@ public class FeedController {
     }
 
     //피드 생성
-    @PostMapping("/write") //List로 반환하는게 맞는지 확인
+    @PostMapping("/write")
     public ResponseEntity<Body> write(@Validated @RequestBody FeedsWriteRequest request){
 
         log.info("POST: /feeds/write - 피드 생성 {}", request);
@@ -74,21 +73,15 @@ public class FeedController {
     public ResponseEntity<Body> delete(@PathVariable("Id") Long feedId){
         log.info("/feeds/delete - 피드 삭제{}",feedId);
         feedService.delete(feedId);
-        return new ResponseSuccess().success("삭제 성공!!");
+        return new ResponseSuccess().success(feedId +"번 피드 삭제 성공");
     }
 
-    /**
-     * 피드 - 좋아요 기능
-     * 한 게시물에 (회원당 ) 좋아요 1번만 가능
-//     * @param tokenUserInfo : 로그인 중인 유저의 정보
-     * @param feedId : 좋아요 누른 게시글 번호
-     */
-
+    //좋아요
     @PostMapping("/like/{Id}")
     public ResponseEntity<Body> handleLike(
             @PathVariable("Id") Long feedId
     ){
-        log.info("like click : {}번 피드 좋아요 누름!",feedId);
+        log.info("like click : {}번 피드 좋아요 누르기",feedId);
         boolean isLiked = feedLikeService.checkIfLiked(feedId);
         feedLikeService.handleLike(feedId);
         System.out.println("isLiked =  "+ isLiked);

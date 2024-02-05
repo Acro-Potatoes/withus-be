@@ -9,7 +9,6 @@ import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
 import com.withus.be.repository.FeedReplyRepository;
 import com.withus.be.repository.FeedRepository;
-import com.withus.be.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,7 @@ public class FeedReplyService {
         FeedReply feedReply = feedReplyRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
         feedReply.setReplyContent(dto.getReplyContent());
         feedReplyRepository.save(feedReply);
-        return "성공";
+        return "댓글 수정 성공";
     }
 
     public void delete(Long replyId) {

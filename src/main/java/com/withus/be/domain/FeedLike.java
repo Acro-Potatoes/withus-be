@@ -5,8 +5,6 @@ import lombok.*;
 
 @Setter
 @Getter
-//@ToString(exclude = {"member","feed"})
-//@EqualsAndHashCode(of = {"like_id"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

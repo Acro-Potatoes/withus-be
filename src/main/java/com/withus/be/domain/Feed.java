@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-//@ToString(exclude = {"member"})
 @NoArgsConstructor
 @Entity
 @Table(name = "feed")
@@ -40,12 +39,11 @@ public class Feed extends BaseEntity {
     private List<FeedReply> feedReplyList = new ArrayList<>();
 
     //Like
-//    @Column(nullable = false)
     private int likeCount;
 
     //좋아요 누른 멤버 리스트
     @OneToMany(mappedBy = "feed",orphanRemoval = true)
-    @Builder.Default //특정 필드를 특정값으로 초기화
+    @Builder.Default
     private List<FeedLike> likes = new ArrayList<>();
 
 }

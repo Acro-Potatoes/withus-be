@@ -33,7 +33,7 @@ public class FeedReplyController {
     @GetMapping("/{Id}")
     public ResponseEntity<Body> list(@PathVariable("Id") Long feedId) {
 
-        //해당 피드 있는지 확인
+        //해당 피드가 있는지 확인
         Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
         
         List<FeedRelyResponse> list = feedReplyService.getList(feedId);
@@ -52,7 +52,7 @@ public class FeedReplyController {
        log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getId(), dto.getReplyContent());
        feedReplyService.writeReply(dto, member);
 
-        return new ResponseSuccess().success("댓글 작성 완료 !!");
+        return new ResponseSuccess().success("댓글 작성 완료");
     }
 
     @DeleteMapping("/delete/{Id}")
@@ -61,13 +61,13 @@ public class FeedReplyController {
     ) {
         log.info("DELETE : feeds/reply/delete/ {}번댓글 삭제", replyId);
         feedReplyService.delete(replyId);
-        return new ResponseSuccess().success("댓글 삭제 성공!!");
+        return new ResponseSuccess().success("댓글 삭제 성공");
     }
 
     @PatchMapping("/modify")
     public ResponseEntity<Body> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
         String message = feedReplyService.modify(dto);
-        log.info("feeds/reply/modify/{} - 피드 댓글 수정 내용: {}", dto.getId(),dto.getReplyContent());
+        log.info("feeds/reply/modify/{} - 댓글 수정 내용: {}", dto.getId(),dto.getReplyContent());
         return new ResponseSuccess().success(message);
     }
 

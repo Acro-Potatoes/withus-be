@@ -43,7 +43,7 @@ public class FeedService {
     public List<FeedResponse> getKeyword(String keyword) {
         List<Feed> feeds = feedRepository.findByKeyword(keyword);
         if (feeds.isEmpty()){
-            throw new EntityNotFoundException(keyword +"이란 단어 없음!");
+            throw new EntityNotFoundException(keyword +"이란 단어가 존재하지 않음");
         }
         return feeds.stream().map(FeedResponse::of).collect(Collectors.toList());
     }
@@ -58,7 +58,7 @@ public class FeedService {
 
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
-        Feed feed = feedRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException("피드 없음!!"));
+        Feed feed = feedRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException("피드가 존재하지 않음"));
         feed.setTitle(dto.getTitle());
         feed.setContent(dto.getContent());
         feedRepository.save(feed);
@@ -67,7 +67,7 @@ public class FeedService {
 
     //피드 삭제
     public void delete(Long feedId) {
-        Feed feeds = feedRepository.findById(feedId).orElseThrow(()->new EntityNotFoundException("피드가 존재하지 않음"));
+        Feed feeds = feedRepository.findById(feedId).orElseThrow(()->new EntityNotFoundException(feedId+"번 피드 존재하지 않음"));
         feedRepository.delete(feeds);
     }
 
