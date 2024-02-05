@@ -1,12 +1,21 @@
 package com.withus.be.controller;
 
+import com.withus.be.common.exception.EntityNotFoundException;
+import com.withus.be.common.response.Response.Body;
+import com.withus.be.common.response.ResponseSuccess;
+import com.withus.be.domain.Feed;
+import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
+import com.withus.be.repository.FeedRepository;
+import com.withus.be.repository.MemberRepository;
 import com.withus.be.service.FeedReplyService;
+import com.withus.be.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,53 +23,56 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/withus/reply")
+@RequestMapping("/feeds-reply")
 public class FeedReplyController {
 
     private final FeedReplyService feedReplyService;
+    private final MemberRepository memberRepository;
+    private final FeedRepository feedRepository;
 
-    @GetMapping("/{replyId}")
-    public ResponseEntity<?> list(@PathVariable Long replyId){
-        log.info("/withus/reply/{} - 댓글 전체 보기", replyId );
+    @GetMapping("/{Id}")
+    public ResponseEntity<Body> list(@PathVariable("Id") Long feedId) {
 
-        List<FeedRelyResponse> list = feedReplyService.getList(replyId);
+        //해당 피드가 있는지 확인
+        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
+        
+        List<FeedRelyResponse> list = feedReplyService.getList(feedId);
+        log.info("/feeds/reply/{} - {}번 피드 댓글 전체 보기", feedId,feedId);
 
-        return ResponseEntity.ok().body(list);
+        return new ResponseSuccess().success(list);
     }
 
     @PostMapping("/write")
-    public ResponseEntity<?> writeReply(
+    public ResponseEntity<Body> writeReply(
             @RequestBody FeedReplyInsertRequest dto
     ) {
-        log.info("/withus/reply/write - {}번 피드에 '{}' 댓글 작성", dto.getFeedId(), dto.getContent());
+        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
 
-        feedReplyService.writeReply(dto);
-        List<FeedRelyResponse> list = feedReplyService.getList(dto.getFeedId());
+       log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getId(), dto.getReplyContent());
+       feedReplyService.writeReply(dto, member);
 
-        return ResponseEntity.ok(list);
+        return new ResponseSuccess().success("댓글 작성 완료");
     }
 
-    @DeleteMapping("/delete/{replyId}")
-    public ResponseEntity<?> deleteReply(
-            @PathVariable Long replyId
+    @DeleteMapping("/delete/{Id}")
+    public ResponseEntity<Body> deleteReply(
+            @PathVariable("Id") Long replyId
     ) {
-        log.info("DELETE : withus/reply/delete/{} - 댓글 삭제", replyId);
-
+        log.info("DELETE : feeds/reply/delete/ {}번댓글 삭제", replyId);
         feedReplyService.delete(replyId);
-
-        return ResponseEntity.ok().body("댓글 삭제 성공");
+        return new ResponseSuccess().success("댓글 삭제 성공");
     }
 
     @PatchMapping("/modify")
-    public ResponseEntity<?> modifyReply(
-            @RequestBody FeedReplyModifyRequest dto
-    ) {
-        log.info("witus/reply/modify/{} - 댓글 수정", dto.getFeedId());
-
-        String  message =  feedReplyService.modify(dto);
-
-        return ResponseEntity.ok().body(message);
+    public ResponseEntity<Body> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
+        String message = feedReplyService.modify(dto);
+        log.info("feeds/reply/modify/{} - 댓글 수정 내용: {}", dto.getId(),dto.getReplyContent());
+        return new ResponseSuccess().success(message);
     }
 
-
 }
+
+
+
+

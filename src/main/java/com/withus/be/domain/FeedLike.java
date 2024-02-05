@@ -5,8 +5,6 @@ import lombok.*;
 
 @Setter
 @Getter
-//@ToString(exclude = {"member","feed"})
-//@EqualsAndHashCode(of = {"like_id"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,14 +14,15 @@ public class FeedLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long like_id;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id", insertable = false,nullable = false)
-//    private Member member;
+    @Column(insertable=false, updatable=false)
+    private  Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id", insertable = false,nullable = false)
+    @JoinColumn(name = "member_id",nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id",nullable = false)
     private Feed feed;
 
 }

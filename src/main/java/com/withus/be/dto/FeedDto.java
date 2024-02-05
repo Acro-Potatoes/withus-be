@@ -3,6 +3,7 @@ package com.withus.be.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.withus.be.domain.Feed;
 import com.withus.be.domain.FeedReply;
+import com.withus.be.domain.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,7 +23,7 @@ public class FeedDto {
     public static class FeedResponse{
 
         private int count;
-        private Long feedId;
+        private Long id;
 
         private String title;
 
@@ -36,11 +37,11 @@ public class FeedDto {
 
         public static FeedResponse of(Feed feed){
             return FeedResponse.builder()
-                    .feedId(feed.getFeedId())
+                    .id(feed.getId())
                     .title(feed.getTitle())
                     .content(feed.getContent())
-                    .created_at(feed.getCreatedAt())
-                    .updated_at(feed.getUpdatedAt())
+                    .created_at(feed.getCreatedDate())
+                    .updated_at(feed.getUpdatedDate())
                     .build();
         }
     }
@@ -60,9 +61,11 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
-        public Feed toEntity() {
+
+        public Feed toEntity(Member member) {
             return Feed.builder()
                     .content(this.content)
+                    .member(member)
                     .title(this.title)
                     .build();
         }
@@ -76,7 +79,7 @@ public class FeedDto {
     public  static class FeedModifyRequest{
 
         @NotNull
-        private Long feedId;
+        private Long id;
 
         @Size(min = 1, max = 100)
         private String title;
@@ -84,13 +87,6 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
-//        @CreationTimestamp //수정시간(저절로 생성)
-//        private LocalDateTime update_time;
-
-        public Feed toEntity() {
-            return Feed.builder().content(this.content).title(this.title)
-                    .build();
-        }
     }
 
 
@@ -104,19 +100,20 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedRelyResponse{
 
-        private Long feedId;
-        private String content;
+        private Long id;
+        private String replyContent;
         private String replyWriter;
-
         @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDateTime replyDate;
+        private LocalDateTime createdDate;
 
         public FeedRelyResponse(FeedReply feedReply) {
-            this.feedId = feedId;
-            this.content = content;
-            this.replyWriter = replyWriter;
-            this.replyDate = replyDate;
+            this.id = feedReply.getId();
+            this.createdDate = feedReply.getCreatedDate();
+            this.replyContent = feedReply.getReplyContent();
+            this.replyWriter = feedReply.getReplyWriter();
         }
+
+
     }
 
 
@@ -130,15 +127,18 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyInsertRequest{
 
-        private Long feedId;
-        private String content;
-        private String replyWriter;
+        private Long id;
 
-//        @JsonFormat(pattern = "yyyy-MM-dd")
-//        private LocalDateTime replyDate;
+        @NotBlank
+        @Size(min = 1, max = 1000)
+        private String replyContent;
 
-        public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)
+
+        public FeedReply toEntity(Member member, Feed feed) {
+            return FeedReply.builder().replyContent(this.replyContent)
+                    .feed(feed)
+                    .replyWriter(member.getNickname())
+                    .member(member)
                     .build();
         }
 
@@ -153,17 +153,10 @@ public class FeedDto {
     @NoArgsConstructor
     public  static class FeedReplyModifyRequest{
 
-        private Long feedId;
-        private String content;
-        private String replyWriter;
+        @NotNull
+        private Long id;
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDateTime replyDate;
-
-        public FeedReply toEntity() {
-            return FeedReply.builder().replyContent(this.content).replyWriter(this.replyWriter)
-                    .build();
-        }
+        private String replyContent;
 
     }
 
