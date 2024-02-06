@@ -71,8 +71,4 @@ public class FeedService {
         feedRepository.delete(feeds);
     }
 
-
-    public Feed getFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new EntityNotFoundException( feedId +"번 게시물이 존재하지 않습니다."));
-    }
 }
