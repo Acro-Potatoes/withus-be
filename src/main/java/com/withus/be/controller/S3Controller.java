@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * S3 관련 컨트롤러로 추후 수정 예정
+ */
 @RestController
 @RequiredArgsConstructor
 public class S3Controller {

@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Collections;
 
 @OpenAPIDefinition(
-        info = @Info(title = "With-us",
-                description = "With-us API Specification",
+        info = @Info(title = "with-us",
+                description = "with-us API Specification",
                 version = "v1.0.0"))
 @Configuration
-public class SwaggerConfig {
+public class SpringDocConfig {
 
     @Bean
     public OpenAPI openAPI() {

@@ -3,12 +3,20 @@ server:
 
 spring:
   profiles:
-    include: local, oauth, aws
+    active: local
+    include: oauth, aws
 
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  devtools:
+    remote:
+      restart:
+        enabled: true
+
 logging:
   config: classpath:logback/logback.xml
+  level:
+    com.withus.be: debug

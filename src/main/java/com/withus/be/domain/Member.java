@@ -6,6 +6,9 @@ import com.withus.be.domain.constant.Provider;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Builder
@@ -30,6 +33,9 @@ public class Member extends BaseEntity {
     @Column(length = 20)
     private String nickname;
 
+    @Column(length = 20, unique = true)
+    private String phoneNum;
+
     private String profileImage;
 
     private boolean activated;
@@ -39,5 +45,18 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Feed> feeds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<FeedReply> feedReplyList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<FeedLike> feedLikes = new ArrayList<>();
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 
 }

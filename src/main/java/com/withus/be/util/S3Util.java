@@ -23,7 +23,6 @@ public class S3Util {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // TODO image url DB 저장
     public String uploadFile(MultipartFile multipartFile) throws IOException {
         String s3FileName = getS3FileName(multipartFile);
         putObjectToS3(multipartFile, s3FileName);
