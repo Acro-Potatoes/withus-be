@@ -6,6 +6,8 @@ import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
 import com.withus.be.service.FeedReplyService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Feed Reply Controller", description = "피드댓글 관련 컨트롤러")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class FeedReplyController {
 
     private final FeedReplyService feedReplyService;
 
+    @Operation(summary = "피드별 댓글 list API")
     @GetMapping("/{Id}")
     public ResponseEntity<Body> list(@PathVariable("Id") Long feedId) {
         List<FeedRelyResponse> list = feedReplyService.getList(feedId);
@@ -29,7 +33,8 @@ public class FeedReplyController {
 
         return new ResponseSuccess().success(list);
     }
-
+    
+    @Operation(summary = "댓글 생성 API")
     @PostMapping("/write")
     public ResponseEntity<Body> writeReply(@RequestBody FeedReplyInsertRequest dto) {
         feedReplyService.writeReply(dto);
@@ -37,6 +42,7 @@ public class FeedReplyController {
         return new ResponseSuccess().success("댓글 작성 완료");
     }
 
+    @Operation(summary = "댓글 삭제 API")
     @DeleteMapping("/delete/{Id}")
     public ResponseEntity<Body> deleteReply(
             @PathVariable("Id") Long replyId
@@ -46,6 +52,7 @@ public class FeedReplyController {
         return new ResponseSuccess().success("댓글 삭제 성공");
     }
 
+    @Operation(summary = "댓글 수정 API")
     @PatchMapping("/modify")
     public ResponseEntity<Body> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
         String message = feedReplyService.modify(dto);
