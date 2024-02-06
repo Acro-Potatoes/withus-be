@@ -46,4 +46,8 @@ public class Feed extends BaseEntity {
     @Builder.Default
     private List<FeedLike> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<HashTag> hashTags = new ArrayList<>();
+
 }
