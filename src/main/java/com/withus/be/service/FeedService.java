@@ -58,7 +58,7 @@ public class FeedService {
 
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
-        Feed feed = feedRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException("피드가 존재하지 않음"));
+        Feed feed =  getFeeds(dto.getId());
         feed.setTitle(dto.getTitle());
         feed.setContent(dto.getContent());
         feedRepository.save(feed);
@@ -67,12 +67,12 @@ public class FeedService {
 
     //피드 삭제
     public void delete(Long feedId) {
+        feedRepository.delete(getFeeds(feedId));
+    }
+
+    public Feed getFeeds(Long feedId){
         Feed feeds = feedRepository.findById(feedId).orElseThrow(()->new EntityNotFoundException(feedId+"번 피드 존재하지 않음"));
-        feedRepository.delete(feeds);
+        return feeds;
     }
 
-
-    public Feed getFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new EntityNotFoundException( feedId +"번 게시물이 존재하지 않습니다."));
-    }
 }

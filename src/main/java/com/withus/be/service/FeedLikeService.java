@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,14 +20,12 @@ public class FeedLikeService {
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
 
-    private final FeedService feedService;
-
     public void handleLike(Long feedId){
 
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
 
-        Feed feed = feedService.getFeed(feedId);
+        Feed feed = feedRepository.findById(feedId).orElseThrow(() -> new EntityNotFoundException(feedId + "번 게시물이 존재하지 않습니다."));
         FeedLike feedLike = feedLikeRepository.findByFeed(feed);
 
         if(feedLike == null){

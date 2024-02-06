@@ -1,17 +1,13 @@
 package com.withus.be.controller;
 
-import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
-import com.withus.be.domain.Feed;
-import com.withus.be.domain.Member;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
-import com.withus.be.repository.FeedRepository;
-import com.withus.be.repository.MemberRepository;
 import com.withus.be.service.FeedReplyService;
-import com.withus.be.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Feed Reply Controller", description = "피드댓글 관련 컨트롤러")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -27,34 +24,25 @@ import java.util.List;
 public class FeedReplyController {
 
     private final FeedReplyService feedReplyService;
-    private final MemberRepository memberRepository;
-    private final FeedRepository feedRepository;
 
+    @Operation(summary = "피드별 댓글 list API")
     @GetMapping("/{Id}")
     public ResponseEntity<Body> list(@PathVariable("Id") Long feedId) {
-
-        //해당 피드가 있는지 확인
-        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
-        
         List<FeedRelyResponse> list = feedReplyService.getList(feedId);
-        log.info("/feeds/reply/{} - {}번 피드 댓글 전체 보기", feedId,feedId);
+        log.info("/feeds/reply/{} - {}번 피드 댓글 전체 보기", feedId, feedId);
 
         return new ResponseSuccess().success(list);
     }
-
+    
+    @Operation(summary = "댓글 생성 API")
     @PostMapping("/write")
-    public ResponseEntity<Body> writeReply(
-            @RequestBody FeedReplyInsertRequest dto
-    ) {
-        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
-        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
-
-       log.info("/feeds/reply/write - {}가 {}번 피드에 '{}' 댓글 작성", member.getNickname(), dto.getId(), dto.getReplyContent());
-       feedReplyService.writeReply(dto, member);
-
+    public ResponseEntity<Body> writeReply(@RequestBody FeedReplyInsertRequest dto) {
+        feedReplyService.writeReply(dto);
+        log.info("/feeds/reply/write - {}번 피드에 \"{}\" 댓글 작성", dto.getId(), dto.getReplyContent());
         return new ResponseSuccess().success("댓글 작성 완료");
     }
 
+    @Operation(summary = "댓글 삭제 API")
     @DeleteMapping("/delete/{Id}")
     public ResponseEntity<Body> deleteReply(
             @PathVariable("Id") Long replyId
@@ -64,10 +52,11 @@ public class FeedReplyController {
         return new ResponseSuccess().success("댓글 삭제 성공");
     }
 
+    @Operation(summary = "댓글 수정 API")
     @PatchMapping("/modify")
     public ResponseEntity<Body> modifyReply(@Validated @RequestBody FeedReplyModifyRequest dto) {
         String message = feedReplyService.modify(dto);
-        log.info("feeds/reply/modify/{} - 댓글 수정 내용: {}", dto.getId(),dto.getReplyContent());
+        log.info("feeds/reply/modify/{} - 댓글 수정 내용: {}", dto.getId(), dto.getReplyContent());
         return new ResponseSuccess().success(message);
     }
 
