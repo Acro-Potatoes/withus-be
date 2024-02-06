@@ -51,7 +51,6 @@ public class FeedController {
         log.info("/feeds/search?keyword ={}",keyword);
         List<FeedResponse> feedResponses = feedService.getKeyword(keyword);
         return new ResponseSuccess().success(feedResponses);
-
     }
 
     //피드 생성
@@ -99,13 +98,5 @@ public class FeedController {
             return new ResponseSuccess().success(feedId +"번 피드 좋아요");
         }
     }
-
-
-
-
-
-
-
-
 
 }

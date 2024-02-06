@@ -1,7 +1,7 @@
 package com.withus.be.common.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.withus.be.common.exception.InvalidTokenException;
+import com.withus.be.common.exception.InvalidParameterException;
 import com.withus.be.dto.TokenDto;
 import com.withus.be.dto.TokenDto.RefreshDto;
 import io.jsonwebtoken.Jwts;
@@ -92,12 +92,12 @@ public class JwtTokenProvider {
 
     private void accessCheck(Object obj, String accessToken) {
         if (!Objects.requireNonNull(obj).toString().contains(accessToken))
-            throw new InvalidTokenException("Access Token이 일치하지 않습니다.");
+            throw new InvalidParameterException("Access Token이 일치하지 않습니다.");
     }
 
     private void refreshCheck(String refreshToken) {
         if (Boolean.FALSE.equals(redisTemplate.hasKey(refreshToken)))
-            throw new InvalidTokenException("Refresh Token에 해당하는 값이 없습니다.");
+            throw new InvalidParameterException("Refresh Token에 해당하는 값이 없습니다.");
     }
 
     private String buildAccessToken(String email, String authority) {
