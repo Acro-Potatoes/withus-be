@@ -28,6 +28,7 @@ public class FeedReplyService {
     private final FeedRepository feedRepository;
     private final MemberRepository memberRepository;
 
+    //피드별 전체 댓글 조회
     public List<FeedRelyResponse> getList(Long feedId) {
         //해당피드가 있는지 확인하기
         Optional<Feed> feedOptional = feedRepository.findById(feedId);
@@ -42,6 +43,7 @@ public class FeedReplyService {
 
     }
 
+    //댓글 생성
     public void writeReply(FeedReplyInsertRequest dto) {
 
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
@@ -57,6 +59,7 @@ public class FeedReplyService {
         log.info("{}가 {}번 피드에 \"{}\"댓글 작성", feedReply.getReplyWriter(), feed.getId(), feedReply.getReplyContent());
     }
 
+    //댓글 수정
     public String modify(FeedReplyModifyRequest dto) {
         FeedReply feedReply = feedReplyRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
         feedReply.setReplyContent(dto.getReplyContent());
@@ -64,6 +67,7 @@ public class FeedReplyService {
         return "댓글 수정 성공";
     }
 
+    //댓글 삭제
     public void delete(Long replyId) {
         feedReplyRepository.deleteById(replyId);
     }
