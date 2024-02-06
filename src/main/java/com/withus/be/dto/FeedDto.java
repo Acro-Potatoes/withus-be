@@ -20,7 +20,7 @@ public class FeedDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class FeedResponse{
+    public static class FeedResponse {
 
         private int count;
         private Long id;
@@ -35,7 +35,7 @@ public class FeedDto {
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime updated_at;
 
-        public static FeedResponse of(Feed feed){
+        public static FeedResponse of(Feed feed) {
             return FeedResponse.builder()
                     .id(feed.getId())
                     .title(feed.getTitle())
@@ -51,7 +51,7 @@ public class FeedDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public  static class FeedsWriteRequest{
+    public static class FeedsWriteRequest {
 
         @NotBlank(message = "제목을 입력해주세요.")
         @Size(min = 1, max = 100)
@@ -76,7 +76,7 @@ public class FeedDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public  static class FeedModifyRequest{
+    public static class FeedModifyRequest {
 
         @NotNull
         private Long id;
@@ -90,7 +90,6 @@ public class FeedDto {
     }
 
 
-
     @Getter
     @Setter
     @Builder
@@ -98,7 +97,7 @@ public class FeedDto {
     @ToString
     @EqualsAndHashCode
     @NoArgsConstructor
-    public  static class FeedRelyResponse{
+    public static class FeedRelyResponse {
 
         private Long id;
         private String replyContent;
@@ -117,7 +116,6 @@ public class FeedDto {
     }
 
 
-
     @Getter
     @Setter
     @Builder
@@ -125,7 +123,7 @@ public class FeedDto {
     @ToString
     @EqualsAndHashCode
     @NoArgsConstructor
-    public  static class FeedReplyInsertRequest{
+    public static class FeedReplyInsertRequest {
 
         private Long id;
 
@@ -151,7 +149,7 @@ public class FeedDto {
     @ToString
     @EqualsAndHashCode
     @NoArgsConstructor
-    public  static class FeedReplyModifyRequest{
+    public static class FeedReplyModifyRequest {
 
         @NotNull
         private Long id;
@@ -159,7 +157,6 @@ public class FeedDto {
         private String replyContent;
 
     }
-
 
 
 }
