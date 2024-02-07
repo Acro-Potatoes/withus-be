@@ -52,6 +52,7 @@ public class FeedService {
     public List<FeedResponse> write(FeedsWriteRequest request) {
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
+        if (request.getImage() == null) request.setImage(" ");
         feedRepository.save(request.toEntity(member));
         return getList();
     }
@@ -61,6 +62,10 @@ public class FeedService {
         Feed feed =  getFeeds(dto.getId());
         feed.setTitle(dto.getTitle());
         feed.setContent(dto.getContent());
+
+        if(dto.getImage() == null) feed.setImage(" ");
+        else feed.setImage(dto.getImage());
+
         feedRepository.save(feed);
         return getList();
     }
