@@ -1,6 +1,7 @@
 package com.withus.be.domain;
 
 import com.withus.be.common.BaseEntity;
+import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,5 +50,10 @@ public class Feed extends BaseEntity {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<HashTag> hashTags = new ArrayList<>();
+
+    public void update(FeedModifyRequest dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
 
 }

@@ -33,7 +33,7 @@ public class FeedHashtagService {
         //수정한 해쉬태그
         List<String> newHashtagList = dto.getHashtagList();
 
-        //기존 해쉬 태그리스트 StringList로 변환
+        //기존 해쉬 태그리스트 StringList 변환
         for (HashTag hashTag : oldHashtag) {
             String hashtagContent = hashTag.getHashtagContent();
             oldHashtag_toString.add(hashtagContent);

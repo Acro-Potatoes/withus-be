@@ -62,7 +62,7 @@ public class FeedReplyService {
     //댓글 수정
     public String modify(FeedReplyModifyRequest dto) {
         FeedReply feedReply = feedReplyRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
-        feedReply.setReplyContent(dto.getReplyContent());
+        feedReply.update(dto.getReplyContent());
         feedReplyRepository.save(feedReply);
         return "댓글 수정 성공";
     }
