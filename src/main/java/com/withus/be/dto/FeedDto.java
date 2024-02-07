@@ -38,7 +38,7 @@ public class FeedDto {
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime updated_at;
 
-        public static FeedResponse of(Feed feed,List<String> hashtagList) {
+        public static FeedResponse of(Feed feed, List<String> hashtagList) {
             return FeedResponse.builder()
                     .id(feed.getId())
                     .title(feed.getTitle())

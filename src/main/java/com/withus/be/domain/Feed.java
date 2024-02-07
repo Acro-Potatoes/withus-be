@@ -28,13 +28,13 @@ public class Feed extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private  Member member;
+    private Member member;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<FeedLike> feedLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<FeedReply> feedReplyList = new ArrayList<>();
 
@@ -42,11 +42,11 @@ public class Feed extends BaseEntity {
     private int likeCount;
 
     //좋아요 누른 멤버 리스트
-    @OneToMany(mappedBy = "feed",orphanRemoval = true)
+    @OneToMany(mappedBy = "feed", orphanRemoval = true)
     @Builder.Default
     private List<FeedLike> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<HashTag> hashTags = new ArrayList<>();
 

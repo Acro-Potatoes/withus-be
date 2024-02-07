@@ -21,7 +21,7 @@ public class FeedReply extends BaseEntity {
     @Column(name = "reply_content", nullable = false, length = 1000)
     private String replyContent;
 
-    @Column(name = "reply_writer", nullable = false ,length = 10)
+    @Column(name = "reply_writer", nullable = false, length = 10)
     private String replyWriter;
 
     @ManyToOne(fetch = FetchType.LAZY)
