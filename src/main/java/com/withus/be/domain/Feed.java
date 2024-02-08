@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 @Getter
 @Setter
@@ -51,9 +52,9 @@ public class Feed extends BaseEntity {
     @Builder.Default
     private List<HashTag> hashTags = new ArrayList<>();
 
-    public void update(FeedModifyRequest dto) {
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
+    public void update(String feedTitle, String feedContent) {
+        this.title = feedTitle;
+        this.content = feedContent;
     }
 
 }

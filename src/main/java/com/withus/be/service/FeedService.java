@@ -62,7 +62,7 @@ public class FeedService {
     //피드 수정
     public List<FeedResponse> modify(FeedModifyRequest dto) {
         Feed feed = getFeeds(dto.getId());
-        feed.update(dto);
+        feed.update(dto.getTitle(), dto.getContent());
         return getList();
     }
 
