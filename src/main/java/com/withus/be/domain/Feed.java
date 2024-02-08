@@ -1,13 +1,11 @@
 package com.withus.be.domain;
 
 import com.withus.be.common.BaseEntity;
-import com.withus.be.dto.FeedDto.FeedModifyRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 @Getter
 @Setter
@@ -55,6 +53,10 @@ public class Feed extends BaseEntity {
     public void update(String feedTitle, String feedContent) {
         this.title = feedTitle;
         this.content = feedContent;
+    }
+
+    public void countlike(int LikeCount){
+        this.likeCount = LikeCount;
     }
 
 }

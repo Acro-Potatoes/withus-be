@@ -45,6 +45,7 @@ public class FeedDto {
                     .content(feed.getContent())
                     .created_at(feed.getCreatedDate())
                     .updated_at(feed.getUpdatedDate())
+                    .count(feed.getLikeCount())
                     .hashtagList(hashtagList)
                     .build();
         }

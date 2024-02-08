@@ -92,13 +92,12 @@ public class FeedController {
             @PathVariable("Id") Long feedId
     ) {
         log.info("like click : {}번 피드 좋아요 누르기", feedId);
-        boolean isLiked = feedLikeService.checkIfLiked(feedId);
-        feedLikeService.handleLike(feedId);
+        boolean isLiked = feedLikeService.handleLike(feedId);
 
         if (isLiked) {
-            return new ResponseSuccess().success(feedId + "번 피드 좋아요 취소");
-        } else {
             return new ResponseSuccess().success(feedId + "번 피드 좋아요");
+        } else {
+            return new ResponseSuccess().success(feedId + "번 피드 좋아요 취소");
         }
     }
 
