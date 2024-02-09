@@ -13,6 +13,7 @@ public enum Result {
     FORBIDDEN("1003", "this request is prohibited."),
     UNSUPPORTED("1004", "this provider is not supported."),
     INVALID("1005", "this request is invalid."),
+    UN_AUTHORIZED("1006", "Not authenticated."),
 
     INTERNAL_ERROR("9000", "internal error"),
     DATA_ACCESS_ERROR("9001", "data access error"),
