@@ -3,8 +3,10 @@ package com.withus.be.domain;
 import com.withus.be.common.BaseEntity;
 import com.withus.be.domain.constant.Authority;
 import com.withus.be.domain.constant.Provider;
+import com.withus.be.dto.MemberDto.ModifyInfoRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Table(name = "member")
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
@@ -57,6 +60,12 @@ public class Member extends BaseEntity {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void modifyInfo(ModifyInfoRequest request, String originName, String originNickname, String originPhoneNum) {
+        this.name = request.getName().isEmpty() ? originName : request.getName();
+        this.nickname = request.getNickname().isEmpty() ? originNickname : request.getNickname();
+        this.phoneNum = request.getPhoneNum().isEmpty() ? originPhoneNum : request.getPhoneNum();
     }
 
 }

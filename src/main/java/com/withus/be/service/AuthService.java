@@ -38,19 +38,6 @@ public class AuthService {
                 MemberRequest.from(memberRequest, passwordEncoder.encode(memberRequest.getPassword()), imageUrl)));
     }
 
-    @Transactional
-    public String changePassword(PasswordRequest passwordRequest) {
-        Member member = memberRepository.findByEmail(passwordRequest.getEmail()).orElseThrow(() ->
-                new EntityNotFoundException("존재하지 않는 회원입니다.")
-        );
-
-        String newPwd = passwordRequest.getNewPassword();
-        if (!newPwd.equals(passwordRequest.getNewPasswordRe())) return "비밀번호가 일치하지 않습니다.";
-
-        member.changePassword(passwordEncoder.encode(newPwd));
-        return "비밀번호가 변경됐습니다.";
-    }
-
     public String getCertNum(String pnum) {
         Optional<Member> member = memberRepository.findByPhoneNum(pnum);
         if (member.isEmpty()) throw new EntityNotFoundException("해당 번호를 가진 회원이 존재하지 않습니다.");
