@@ -9,6 +9,7 @@ import org.slf4j.MDC;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,6 +55,25 @@ public class BaseExceptionHandler {
                 errMsg);
 
         return new ResponseFail(e.getResult(), errMsg).fail();
+    }
+
+    /**
+     * http status: 200 AND result: FAIL
+     * <p>
+     * 자격 증명 오류
+     */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<Body> badCredentialException(BadCredentialsException e) {
+        String eventId = MDC.get(REQUEST_UUID);
+        String errMsg = NestedExceptionUtils.getMostSpecificCause(e).getMessage();
+        log.error("[BadCredentialsException] eventId = {}, cause = {}, errMsg = {}",
+                eventId,
+                NestedExceptionUtils.getMostSpecificCause(e).getStackTrace()[0],
+                errMsg);
+
+        return new ResponseFail(CREDENTIAL_ERROR, errMsg).fail();
     }
 
     /**

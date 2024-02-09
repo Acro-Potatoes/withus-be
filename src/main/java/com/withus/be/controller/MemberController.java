@@ -5,6 +5,7 @@ import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.dto.MemberDto.ModifyInfoRequest;
 import com.withus.be.dto.MemberDto.PasswordRequest;
+import com.withus.be.dto.MemberDto.PhoneNumRequest;
 import com.withus.be.service.MemberService;
 import com.withus.be.util.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +45,18 @@ public class MemberController {
     @PutMapping("/myInfo")
     public ResponseEntity<Body> changeMyInfo(@Valid @RequestBody ModifyInfoRequest request) {
         return new ResponseSuccess().success(memberService.modifyInfo(getCurrentEmail(), request));
+    }
+
+    @Operation(summary = "회원 탈퇴 API")
+    @PutMapping("/delete")
+    public ResponseEntity<Body> withdrawalMember() {
+        return new ResponseSuccess().success(memberService.withdrawalMember(getCurrentEmail()));
+    }
+
+    @Operation(summary = "휴대폰 번호로 이메일 조회 API", description = "아이디 찾기에서 사용할 API")
+    @GetMapping("/findId")
+    public ResponseEntity<Body> findId(PhoneNumRequest request) {
+        return new ResponseSuccess().success(memberService.getEmailByPhoneNum(request.getPhoneNum()));
     }
 
     private String getCurrentEmail() {
