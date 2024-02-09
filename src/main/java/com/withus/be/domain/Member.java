@@ -7,7 +7,10 @@ import com.withus.be.dto.MemberDto.ModifyInfoRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,8 @@ import java.util.List;
 @Table(name = "member")
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE member SET activated = false, deleted_date = now() WHERE id = ?")
+@SQLRestriction("activated = true")
 public class Member extends BaseEntity {
 
     @Id
@@ -49,7 +54,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    private LocalDateTime deletedDate;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feed> feeds = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")

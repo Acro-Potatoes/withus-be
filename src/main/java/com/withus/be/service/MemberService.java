@@ -51,10 +51,23 @@ public class MemberService {
         return "정보 수정이 완료됐습니다.";
     }
 
+    @Transactional
+    public String withdrawalMember(String email) {
+        memberRepository.delete(getMember(email));
+        return "회원 탈퇴가 완료됐습니다.";
+    }
+
     private Member getMember(String email) {
         return memberRepository.findByEmail(email).orElseThrow(() ->
                 new EntityNotFoundException(String.format("There is no corresponding member for '%s'.", email))
         );
+    }
+
+    @Transactional(readOnly = true)
+    public String getEmailByPhoneNum(String phoneNum) {
+        return memberRepository.findByPhoneNum(phoneNum).orElseThrow(() ->
+                new EntityNotFoundException(String.format("There is no corresponding member for '%s'.", phoneNum))
+        ).getEmail();
     }
 
 }
