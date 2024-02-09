@@ -47,7 +47,7 @@ public class MemberService {
     @Transactional
     public String modifyInfo(String email, ModifyInfoRequest request) {
         Member member = getMember(email);
-        member.modifyInfo(request, member.getName(), member.getNickname(), member.getPhoneNum());
+        member.modifyInfo(request, member.getName(), member.getNickname(), member.getPhoneNum(), member.getProfileImage());
         return "정보 수정이 완료됐습니다.";
     }
 
