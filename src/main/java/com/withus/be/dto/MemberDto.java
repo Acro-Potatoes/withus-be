@@ -114,6 +114,7 @@ public class MemberDto {
         private String name;
         private String nickname;
         private String phoneNum;
+        private String imageUrl;
     }
 
 

@@ -62,10 +62,11 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public void modifyInfo(ModifyInfoRequest request, String originName, String originNickname, String originPhoneNum) {
+    public void modifyInfo(ModifyInfoRequest request, String originName, String originNickname, String originPhoneNum, String imageUrl) {
         this.name = request.getName().isEmpty() ? originName : request.getName();
         this.nickname = request.getNickname().isEmpty() ? originNickname : request.getNickname();
         this.phoneNum = request.getPhoneNum().isEmpty() ? originPhoneNum : request.getPhoneNum();
+        this.profileImage = request.getImageUrl().isEmpty() ? imageUrl : request.getImageUrl();
     }
 
 }
