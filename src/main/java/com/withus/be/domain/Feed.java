@@ -26,7 +26,7 @@ public class Feed extends BaseEntity {
     @Column(length = 3000, nullable = false)
     private String content;
 
-    @Column(length = 100,nullable = false)
+    @Column(length = 100)
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)

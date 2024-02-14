@@ -2,9 +2,11 @@ package com.withus.be.controller;
 
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
+import com.withus.be.dto.FeedDto;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
+import com.withus.be.dto.FeedDto.FeedRereplyInsertRequest;
 import com.withus.be.service.FeedReplyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,5 +61,15 @@ public class FeedReplyController {
         log.info("feeds/reply/modify/{} - 댓글 수정 내용: {}", dto.getId(), dto.getReplyContent());
         return new ResponseSuccess().success(message);
     }
+
+    @Operation(summary = "대댓글 생성 API")
+    @PostMapping("/replywrite")
+    public ResponseEntity<Body> writeRereply(@RequestBody FeedRereplyInsertRequest dto) {
+        feedReplyService.writeRereply(dto);
+        log.info("/feeds/reply/replywrite - {}번 댓글에 \"{}\" 대댓글 작성", dto.getParentId(), dto.getReplyContent());
+        return new ResponseSuccess().success("대댓글 작성 완료");
+    }
+
+
 
 }

@@ -4,9 +4,11 @@ import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.domain.Feed;
 import com.withus.be.domain.FeedReply;
 import com.withus.be.domain.Member;
+import com.withus.be.dto.FeedDto;
 import com.withus.be.dto.FeedDto.FeedRelyResponse;
 import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
 import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
+import com.withus.be.dto.FeedDto.FeedRereplyInsertRequest;
 import com.withus.be.repository.FeedReplyRepository;
 import com.withus.be.repository.FeedRepository;
 import com.withus.be.repository.MemberRepository;
@@ -71,5 +73,24 @@ public class FeedReplyService {
     //댓글 삭제
     public void delete(Long replyId) {
         feedReplyRepository.deleteById(replyId);
+    }
+
+    //대댓글 생성
+    public void writeRereply(FeedRereplyInsertRequest dto) {
+        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
+
+        FeedReply feedReply_parent = feedReplyRepository.findById(dto.getParentId()).orElseThrow(EntityNotFoundException::new);
+        Feed feed = feedRepository.findById(feedReply_parent.getFeed().getId()).orElseThrow(EntityNotFoundException::new);
+
+        FeedReply feedReply = FeedRereplyInsertRequest.builder()
+                .parentId(feedReply_parent.getId())
+                .id(dto.getId())
+                .replyContent(dto.getReplyContent())
+                .build().toEntity(member,feedReply_parent,feed);
+
+        feedReplyRepository.save(feedReply);
+        log.info("{}가 {}번 댓글에 \"{}\"댓글 작성", feedReply.getReplyWriter(), feedReply_parent.getId(), feedReply.getReplyContent());
+
     }
 }

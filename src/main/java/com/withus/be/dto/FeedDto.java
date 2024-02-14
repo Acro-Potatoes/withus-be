@@ -178,4 +178,36 @@ public class FeedDto {
     }
 
 
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @ToString
+    @EqualsAndHashCode
+    @NoArgsConstructor
+    public static class FeedRereplyInsertRequest {
+
+        private Long id;
+
+        @NotBlank
+        @Size(min = 1, max = 1000)
+        private String replyContent;
+
+        private Long parentId;
+
+
+        public FeedReply toEntity(Member member, FeedReply reply,Feed feed) {
+            return FeedReply.builder().replyContent(this.replyContent)
+                    .replyWriter(member.getNickname())
+                    .comment(reply)
+                    .member(member)
+                    .feed(feed)
+                    .build();
+        }
+
+    }
+
+
+
+
 }
