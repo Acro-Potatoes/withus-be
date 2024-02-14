@@ -3,9 +3,14 @@ package com.withus.be.domain;
 import com.withus.be.common.BaseEntity;
 import com.withus.be.domain.constant.Authority;
 import com.withus.be.domain.constant.Provider;
+import com.withus.be.dto.MemberDto.ModifyInfoRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +19,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Table(name = "member")
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE member SET activated = false, deleted_date = now() WHERE id = ?")
+@SQLRestriction("activated = true")
 public class Member extends BaseEntity {
 
     @Id
@@ -46,7 +54,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    private LocalDateTime deletedDate;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feed> feeds = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
@@ -57,6 +67,13 @@ public class Member extends BaseEntity {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void modifyInfo(ModifyInfoRequest request, String originName, String originNickname, String originPhoneNum, String imageUrl) {
+        this.name = request.getName().isEmpty() ? originName : request.getName();
+        this.nickname = request.getNickname().isEmpty() ? originNickname : request.getNickname();
+        this.phoneNum = request.getPhoneNum().isEmpty() ? originPhoneNum : request.getPhoneNum();
+        this.profileImage = request.getImageUrl().isEmpty() ? imageUrl : request.getImageUrl();
     }
 
 }

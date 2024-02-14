@@ -6,7 +6,6 @@ import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.dto.EmailDto;
 import com.withus.be.dto.LoginDto;
 import com.withus.be.dto.MemberDto;
-import com.withus.be.dto.MemberDto.PasswordRequest;
 import com.withus.be.dto.MemberDto.PhoneNumCertRequest;
 import com.withus.be.dto.MemberDto.PhoneNumRequest;
 import com.withus.be.dto.TokenDto;
@@ -58,7 +57,7 @@ public class AuthController {
         return getTokenRes(token);
     }
 
-    @Operation(summary = "Token 재발급", description = "Refresh Token으로 Token 재발급 API")
+    @Operation(summary = "Token 재발급 API", description = "Refresh Token으로 Token 재발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<Body> getRefresh(@RequestBody TokenDto tokenDto) {
         return getTokenRes(
@@ -68,39 +67,33 @@ public class AuthController {
         );
     }
 
-    private ResponseEntity<Body> getTokenRes(TokenDto token) {
-        new HttpHeaders().add(AUTHORIZATION_HEADER, JWT_HEADER_PREFIX + token.getAccessToken());
-        return new ResponseSuccess().success(token);
-    }
-
-    @Operation(summary = "Email 인증 번호 전송")
+    @Operation(summary = "Email 인증 번호 전송 API")
     @PostMapping("/cert-mail")
     public ResponseEntity<Body> certificationMail(@RequestParam("email") String email) throws Exception {
         return new ResponseSuccess().success(mailService.sendSimpleMessage(email));
     }
 
-    @Operation(summary = "Email 인증 번호 확인", description = "Email 인증 번호 확인 (5분 이내)")
+    @Operation(summary = "Email 인증 번호 확인 API", description = "Email 인증 번호 확인 (5분 이내)")
     @PostMapping("/cert-mail/confirm")
     public ResponseEntity<Body> confirmCertNum(@Valid @RequestBody EmailDto emailDto) {
         return new ResponseSuccess().success(mailService.confirmCertNum(emailDto));
     }
 
-    @Operation(summary = "비밀번호 변경", description = "(미로그인) 비밀번호 찾기 > 비밀번호 변경")
-    @PostMapping("/pwd")
-    public ResponseEntity<Body> changePassword(@Valid @RequestBody PasswordRequest passwordRequest) {
-        return new ResponseSuccess().success(authService.changePassword(passwordRequest));
-    }
-
-    @Operation(summary = "휴대폰 인증 번호 전송")
+    @Operation(summary = "휴대폰 인증 번호 전송 API")
     @PostMapping("/cert-pnum")
     public ResponseEntity<Body> certificationPhoneNum(@Valid @RequestBody PhoneNumRequest phoneNumRequest) {
         return new ResponseSuccess().success(authService.getCertNum(phoneNumRequest.getPhoneNum()));
     }
 
-    @Operation(summary = "휴대폰 인증번호 확인")
+    @Operation(summary = "휴대폰 인증번호 확인 API", description = "휴대폰 인증 번호 확인 (5분 이내)")
     @PostMapping("/cert-pnum/confirm")
     public ResponseEntity<Body> confirmCertPhoneNum(@Valid @RequestBody PhoneNumCertRequest request) {
         return new ResponseSuccess().success(authService.confirmCertNum(request.getPhoneNum(), request.getCertNum()));
+    }
+
+    private ResponseEntity<Body> getTokenRes(TokenDto token) {
+        new HttpHeaders().add(AUTHORIZATION_HEADER, JWT_HEADER_PREFIX + token.getAccessToken());
+        return new ResponseSuccess().success(token);
     }
 
 }

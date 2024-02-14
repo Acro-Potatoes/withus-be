@@ -29,6 +29,7 @@ public class FeedDto {
         private String title;
 
         private String content;
+        private String image;
 
         private List<String> hashtagList;
 
@@ -42,6 +43,7 @@ public class FeedDto {
             return FeedResponse.builder()
                     .id(feed.getId())
                     .title(feed.getTitle())
+                    .image(feed.getImage())
                     .content(feed.getContent())
                     .created_at(feed.getCreatedDate())
                     .updated_at(feed.getUpdatedDate())
@@ -66,13 +68,18 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
+
         private List<String> hashtagList;
+
+        private String image;
+
 
 
         public Feed toEntity(Member member) {
             return Feed.builder()
                     .title(this.title)
                     .content(this.content)
+                    .image(this.image)
                     .member(member)
                     .build();
         }
@@ -94,7 +101,10 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
+
         private List<String> hashtagList;
+
+        private String image;
 
     }
 

@@ -102,10 +102,21 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PasswordRequest {
-        private String email;;
+        private String email;
         private String newPassword;
         private String newPasswordRe;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ModifyInfoRequest {
+        private String name;
+        private String nickname;
+        private String phoneNum;
+        private String imageUrl;
+    }
+
 
     @Getter
     @AllArgsConstructor
