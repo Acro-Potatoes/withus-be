@@ -53,13 +53,13 @@ public class Feed extends BaseEntity {
     @Builder.Default
     private List<HashTag> hashTags = new ArrayList<>();
 
-    public void update(String feedTitle, String feedContent,String feedimage) {
+    public void update(String feedTitle, String feedContent, String feedimage) {
         this.title = feedTitle;
         this.content = feedContent;
         this.image = feedimage;
     }
 
-    public void countlike(int LikeCount){
+    public void countlike(int LikeCount) {
         this.likeCount = LikeCount;
     }
 

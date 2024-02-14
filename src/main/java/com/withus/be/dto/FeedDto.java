@@ -73,7 +73,6 @@ public class FeedDto {
         private String image;
 
 
-
         public Feed toEntity(Member member) {
             return Feed.builder()
                     .title(this.title)
@@ -106,11 +105,6 @@ public class FeedDto {
         private String image;
 
     }
-
-
-
-
-
 
 
 }

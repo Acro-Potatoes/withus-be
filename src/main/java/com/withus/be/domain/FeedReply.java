@@ -2,7 +2,6 @@ package com.withus.be.domain;
 
 import com.withus.be.common.BaseEntity;
 import jakarta.persistence.*;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.*;
 
 import java.util.ArrayList;
