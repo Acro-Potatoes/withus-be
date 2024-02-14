@@ -67,9 +67,6 @@ public class FeedService {
 
         Feed feed = getFeeds(dto.getId());
         feed.update(dto.getTitle(), dto.getContent());
-        Feed feed =  getFeeds(dto.getId());
-        feed.setTitle(dto.getTitle());
-        feed.setContent(dto.getContent());
 
         if(dto.getImage() == null) feed.setImage(" ");
         else feed.setImage(dto.getImage());

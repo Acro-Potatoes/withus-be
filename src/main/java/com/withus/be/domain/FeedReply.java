@@ -2,7 +2,11 @@ package com.withus.be.domain;
 
 import com.withus.be.common.BaseEntity;
 import jakarta.persistence.*;
+import jdk.dynalink.linker.LinkerServices;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -31,6 +35,15 @@ public class FeedReply extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id") // FK
     private Member member;
+
+    /*대댓글 self join*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_Id")
+    private FeedReply comment;
+
+    @OneToMany(mappedBy = "comment",cascade = CascadeType.ALL)
+    private List<FeedReply> commentList = new ArrayList<>();
+    /*self join end*/
 
     public void update(String replyContent) {
         this.replyContent = replyContent;
