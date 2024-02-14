@@ -74,6 +74,22 @@ public class FeedReplyService {
         feedReplyRepository.deleteById(replyId);
     }
 
+    //대댓글 삭제
+    public void deleteRereply(Long replyId) {
+        FeedReply feedReply = feedReplyRepository.findById(replyId).orElseThrow(EntityNotFoundException::new);
+        log.info(String.valueOf(feedReply.getComment()));
+        if (feedReply.getComment() == null) throw new EntityNotFoundException("대댓글 삭제가 불가합니다!!");
+        else feedReplyRepository.deleteById(replyId);
+    }
+
+    //대댓글 수정
+
+    public String modifyRereply(FeedReplyModifyRequest dto) {
+        FeedReply feedReply = feedReplyRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
+        feedReply.update(dto.getReplyContent());
+        return "댓글 수정 성공";
+    }
+
     //대댓글 생성
     public void writeRereply(FeedRereplyInsertRequest dto) {
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
@@ -85,10 +101,11 @@ public class FeedReplyService {
         FeedReply feedReply = FeedRereplyInsertRequest.builder()
                 .parentId(feedReply_parent.getId())
                 .replyContent(dto.getReplyContent())
-                .build().toEntity(member,feedReply_parent,feed);
+                .build().toEntity(member, feedReply_parent, feed);
 
         feedReplyRepository.save(feedReply);
         log.info("{}가 {}번 댓글에 \"{}\"댓글 작성", feedReply.getReplyWriter(), feedReply_parent.getId(), feedReply.getReplyContent());
 
     }
+
 }

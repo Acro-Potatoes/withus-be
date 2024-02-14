@@ -58,7 +58,6 @@ public class FeedService {
         Feed save = feedRepository.save(request.toEntity(member));
         //해쉬태그 List 추가하기
         createHashtag(save, request.getHashtagList());
-//        feedRepository.save(request.toEntity(member));
         return getList();
     }
 

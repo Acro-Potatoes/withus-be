@@ -69,6 +69,27 @@ public class FeedReplyController {
         return new ResponseSuccess().success("대댓글 작성 완료");
     }
 
+    @Operation(summary = "대댓글 삭제 API")
+    @DeleteMapping("/replydelete/{Id}")
+    public ResponseEntity<Body> deleteRereply(
+            @PathVariable("Id") Long replyId
+    ) {
+        log.info("DELETE : feeds/reply/delete/ {}번대댓글 삭제", replyId);
+        feedReplyService.deleteRereply(replyId);
+        return new ResponseSuccess().success("댓글 삭제 성공");
+    }
+
+    @Operation(summary = "대댓글 수정 API")
+    @PatchMapping("/replymodify")
+    public ResponseEntity<Body> modifyRereply(@Validated @RequestBody FeedReplyModifyRequest dto) {
+        String message = feedReplyService.modifyRereply(dto);
+        log.info("feeds/reply/modify/{} - 댓글 수정 내용: {}", dto.getId(), dto.getReplyContent());
+        return new ResponseSuccess().success(message);
+    }
+
+
+
+
 
 
 }

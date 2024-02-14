@@ -8,4 +8,5 @@ import java.util.List;
 public interface FeedReplyRepository extends JpaRepository<FeedReply, Long> {
 
     List<FeedReply> findByFeedId(Long feedId);
+
 }

@@ -41,7 +41,7 @@ public class FeedReply extends BaseEntity {
     @JoinColumn(name = "comment_Id")
     private FeedReply comment;
 
-    @OneToMany(mappedBy = "comment",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment",cascade = CascadeType.REMOVE)
     private List<FeedReply> commentList = new ArrayList<>();
     /*self join end*/
 
