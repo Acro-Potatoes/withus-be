@@ -4,11 +4,10 @@ import com.withus.be.common.exception.EntityNotFoundException;
 import com.withus.be.domain.Feed;
 import com.withus.be.domain.FeedReply;
 import com.withus.be.domain.Member;
-import com.withus.be.dto.FeedDto;
-import com.withus.be.dto.FeedDto.FeedRelyResponse;
-import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
-import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
-import com.withus.be.dto.FeedDto.FeedRereplyInsertRequest;
+import com.withus.be.dto.FeedReplyDto.FeedRelyResponse;
+import com.withus.be.dto.FeedReplyDto.FeedReplyInsertRequest;
+import com.withus.be.dto.FeedReplyDto.FeedReplyModifyRequest;
+import com.withus.be.dto.FeedReplyDto.FeedRereplyInsertRequest;
 import com.withus.be.repository.FeedReplyRepository;
 import com.withus.be.repository.FeedRepository;
 import com.withus.be.repository.MemberRepository;
@@ -85,7 +84,6 @@ public class FeedReplyService {
 
         FeedReply feedReply = FeedRereplyInsertRequest.builder()
                 .parentId(feedReply_parent.getId())
-                .id(dto.getId())
                 .replyContent(dto.getReplyContent())
                 .build().toEntity(member,feedReply_parent,feed);
 

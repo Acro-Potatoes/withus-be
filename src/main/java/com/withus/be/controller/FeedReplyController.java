@@ -2,11 +2,10 @@ package com.withus.be.controller;
 
 import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
-import com.withus.be.dto.FeedDto;
-import com.withus.be.dto.FeedDto.FeedRelyResponse;
-import com.withus.be.dto.FeedDto.FeedReplyInsertRequest;
-import com.withus.be.dto.FeedDto.FeedReplyModifyRequest;
-import com.withus.be.dto.FeedDto.FeedRereplyInsertRequest;
+import com.withus.be.dto.FeedReplyDto.FeedRelyResponse;
+import com.withus.be.dto.FeedReplyDto.FeedReplyInsertRequest;
+import com.withus.be.dto.FeedReplyDto.FeedReplyModifyRequest;
+import com.withus.be.dto.FeedReplyDto.FeedRereplyInsertRequest;
 import com.withus.be.service.FeedReplyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
