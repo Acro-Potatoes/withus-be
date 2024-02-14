@@ -54,11 +54,11 @@ public class FeedService {
         String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
 
+        if (request.getImage() == null) request.setImage("  ");
         Feed save = feedRepository.save(request.toEntity(member));
         //해쉬태그 List 추가하기
         createHashtag(save, request.getHashtagList());
-        if (request.getImage() == null) request.setImage(" ");
-        feedRepository.save(request.toEntity(member));
+//        feedRepository.save(request.toEntity(member));
         return getList();
     }
 
@@ -66,10 +66,11 @@ public class FeedService {
     public List<FeedResponse> modify(FeedModifyRequest dto) {
 
         Feed feed = getFeeds(dto.getId());
-        feed.update(dto.getTitle(), dto.getContent());
-
-        if(dto.getImage() == null) feed.setImage(" ");
-        else feed.setImage(dto.getImage());
+        if(dto.getImage() == null){
+            feed.update(dto.getTitle(), dto.getContent(),"  ");
+        } else{
+            feed.update(dto.getTitle(), dto.getContent(),dto.getImage());
+        }
 
         feedRepository.save(feed);
         return getList();
