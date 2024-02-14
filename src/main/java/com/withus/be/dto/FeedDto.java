@@ -11,6 +11,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 public class FeedDto {
@@ -30,13 +31,15 @@ public class FeedDto {
         private String content;
         private String image;
 
+        private List<String> hashtagList;
+
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime created_at;
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime updated_at;
 
-        public static FeedResponse of(Feed feed) {
+        public static FeedResponse of(Feed feed, List<String> hashtagList) {
             return FeedResponse.builder()
                     .id(feed.getId())
                     .title(feed.getTitle())
@@ -44,6 +47,8 @@ public class FeedDto {
                     .content(feed.getContent())
                     .created_at(feed.getCreatedDate())
                     .updated_at(feed.getUpdatedDate())
+                    .count(feed.getLikeCount())
+                    .hashtagList(hashtagList)
                     .build();
         }
     }
@@ -63,15 +68,19 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
+
+        private List<String> hashtagList;
+
         private String image;
+
 
 
         public Feed toEntity(Member member) {
             return Feed.builder()
+                    .title(this.title)
                     .content(this.content)
                     .image(this.image)
                     .member(member)
-                    .title(this.title)
                     .build();
         }
     }
@@ -92,8 +101,10 @@ public class FeedDto {
         @Size(min = 1, max = 3000)
         private String content;
 
-        private String image;
 
+        private List<String> hashtagList;
+
+        private String image;
 
     }
 

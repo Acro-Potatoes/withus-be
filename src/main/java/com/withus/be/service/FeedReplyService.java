@@ -11,6 +11,7 @@ import com.withus.be.repository.FeedReplyRepository;
 import com.withus.be.repository.FeedRepository;
 import com.withus.be.repository.MemberRepository;
 import com.withus.be.util.SecurityUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class FeedReplyService {
 
     private final FeedReplyRepository feedReplyRepository;
@@ -62,8 +64,7 @@ public class FeedReplyService {
     //댓글 수정
     public String modify(FeedReplyModifyRequest dto) {
         FeedReply feedReply = feedReplyRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
-        feedReply.setReplyContent(dto.getReplyContent());
-        feedReplyRepository.save(feedReply);
+        feedReply.update(dto.getReplyContent());
         return "댓글 수정 성공";
     }
 

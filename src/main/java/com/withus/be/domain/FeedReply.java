@@ -21,7 +21,7 @@ public class FeedReply extends BaseEntity {
     @Column(name = "reply_content", nullable = false, length = 1000)
     private String replyContent;
 
-    @Column(name = "reply_writer", nullable = false ,length = 10)
+    @Column(name = "reply_writer", nullable = false, length = 30)
     private String replyWriter;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,4 +31,8 @@ public class FeedReply extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id") // FK
     private Member member;
+
+    public void update(String replyContent) {
+        this.replyContent = replyContent;
+    }
 }
