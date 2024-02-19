@@ -17,31 +17,38 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
-public class S3Controller {
+@RequestMapping("/file")
+public class FileController {
 
     private final S3Util s3Util;
 
+    @Operation(summary = "프로필 이미지 업로드 API")
+    @PostMapping("/profile")
+    public ResponseEntity<Body> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+        return new ResponseSuccess().success(s3Util.uploadProfileImage(multipartFile));
+    }
+
     @Operation(summary = "단일 파일 업로드 API")
-    @PostMapping("/image")
+    @PostMapping
     public ResponseEntity<Body> uploadFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
         return new ResponseSuccess().success(s3Util.uploadFile(multipartFile));
     }
 
     @Operation(summary = "다중 파일 업로드 API")
-    @PostMapping("/images")
+    @PostMapping("/multi")
     public ResponseEntity<Body> uploadFiles(@RequestParam("file") List<MultipartFile> multipartFile) throws IOException {
         s3Util.uploadFiles(multipartFile);
         return new ResponseSuccess().success();
     }
 
-    @Operation(summary = "단일 파일 이름 조회 API")
-    @GetMapping("/image/info")
+    @Operation(summary = "단일 파일 URL 조회 API")
+    @GetMapping("/info")
     public ResponseEntity<Body> getFile(@RequestParam("filename") String fileName) {
         return new ResponseSuccess().success(s3Util.getFileUrl(fileName));
     }
 
     @Operation(summary = "단일 파일 삭제 API")
-    @DeleteMapping("/image")
+    @DeleteMapping
     public ResponseEntity<Body> deleteFile(@RequestParam("filename") String fileName) {
         s3Util.deleteFile(fileName);
         return new ResponseSuccess().success();

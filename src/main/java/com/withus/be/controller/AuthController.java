@@ -96,8 +96,7 @@ public class AuthController {
     @Operation(summary = "이메일 중복 확인 API")
     @PostMapping("/email/check")
     public ResponseEntity<Body> emailDuplicateCheck(@RequestParam(value = "email") String email) {
-        if (!authService.emailDuplicateCheck(email)) return new ResponseFail(Result.CONFLICT, "중복된 이메일입니다.").fail();
-        return new ResponseSuccess().success("회원 가입이 가능합니다.");
+        return new ResponseSuccess("회원 가입이 가능합니다.").success(authService.emailDuplicateCheck(email));
     }
 
     private ResponseEntity<Body> getTokenRes(TokenDto token) {

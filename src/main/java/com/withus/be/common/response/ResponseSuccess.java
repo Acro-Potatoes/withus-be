@@ -6,8 +6,13 @@ public class ResponseSuccess extends Response {
 
     private static final String DEFAULT_CODE = SUCCESS.getCode();
     private static final String DEFAULT_MESSAGE = SUCCESS.getDesc();
+    private String message;
 
     public ResponseSuccess() {
+    }
+
+    public ResponseSuccess(String message) {
+        this.message = message;
     }
 
     @Override
@@ -17,7 +22,7 @@ public class ResponseSuccess extends Response {
 
     @Override
     protected String resultMessage() {
-        return DEFAULT_MESSAGE;
+        return message == null ? DEFAULT_MESSAGE : message;
     }
 
 }
