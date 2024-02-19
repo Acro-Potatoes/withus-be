@@ -4,6 +4,7 @@ import com.withus.be.common.response.Response.Body;
 import com.withus.be.common.response.ResponseSuccess;
 import com.withus.be.util.S3Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * S3 관련 컨트롤러로 추후 수정 예정
- */
+@Tag(name = "File Controller", description = "파일 업/다운로드 관련 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/file")
