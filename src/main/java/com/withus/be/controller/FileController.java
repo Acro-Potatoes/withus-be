@@ -16,7 +16,7 @@ import java.util.List;
 @Tag(name = "File Controller", description = "파일 업/다운로드 관련 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/file")
+@RequestMapping("/files")
 public class FileController {
 
     private final S3Util s3Util;
