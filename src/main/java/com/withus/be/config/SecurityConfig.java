@@ -34,9 +34,10 @@ public class SecurityConfig {
             "/webjars/**", "/swagger-ui.html", "/error"
     };
 
-    private static final String[] AUTH_LIST_URL = {
+    private static final String[] AUTH_WHITE_LIST_URL = {
             "/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup", "/auth/cert-mail",
-            "/auth/cert-mail/confirm", "/auth/pwd", "/auth/cert-pnum", "/auth/cert-pnum/confirm"
+            "/auth/cert-mail/confirm", "/auth/pwd", "/auth/cert-pnum", "/auth/cert-pnum/confirm",
+            "/auth/email/check"
     };
 
     @Bean
@@ -55,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .requestMatchers(AUTH_LIST_URL).permitAll()
+                                .requestMatchers(AUTH_WHITE_LIST_URL).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->

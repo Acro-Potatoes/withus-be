@@ -77,4 +77,7 @@ public class AuthService {
         );
     }
 
+    public boolean emailDuplicateCheck(String email) {
+        return memberRepository.findByEmail(email).isEmpty();
+    }
 }
