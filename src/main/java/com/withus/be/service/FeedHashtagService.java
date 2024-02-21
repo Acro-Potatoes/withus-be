@@ -28,18 +28,18 @@ public class FeedHashtagService {
 
         //피드에서 가져온 기존 해쉬태그리스트
         List<HashTag> oldHashtag = feed.getHashTags();
-        List<String> oldHashtag_toString = new ArrayList<>();
+        List<String> oldHashtagToString = new ArrayList<>();
 
         //수정한 해쉬태그
         List<String> newHashtagList = dto.getHashtagList();
 
         //기존 해쉬 태그리스트 StringList 변환
-        oldHashtag.stream().map(HashTag::getHashtagContent).forEach(oldHashtag_toString::add);
+        oldHashtag.stream().map(HashTag::getHashtagContent).forEach(oldHashtagToString::add);
 
         //기존해쉬 태그에 새로운 단어가 존재하지않는다면 해쉬태그 추가
-        newHashtagList.stream().filter(h->!oldHashtag_toString.contains(h)).forEach(h->addHashtag(feed,h));
+        newHashtagList.stream().filter(h->!oldHashtagToString.contains(h)).forEach(h->addHashtag(feed,h));
         //새로운해쉬태그 리스트에 기존단어가 존재하지않는다면 리스트에서 해쉬태그 삭제
-        newHashtagList.stream().filter(h->!newHashtagList.contains(h)).forEach(h->deleteHashtag(feed,h));
+        oldHashtagToString.stream().filter(h->!newHashtagList.contains(h)).forEach(h->deleteHashtag(feed,h));
     }
 
     //새로운 해쉬태그 단어 추가
