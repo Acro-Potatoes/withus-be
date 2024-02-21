@@ -31,34 +31,37 @@ public class FeedLikeService {
         FeedLike feedLike = feedLikeRepository.findByFeed(feed);
 
         if(feedLike == null){
-            feedLike = FeedLike.builder()
-                    .member(member)
-                    .feed(feed)
-                    .build();
-            feedLikeRepository.save(feedLike);
-
-            //좋아요 수 증가
-            feed.countlike(feed.getLikeCount() + 1);
             log.info("멤버 {}가 좋아요 클릭 ->{}", member.getEmail(),feed.getLikeCount());
-            return true;
-        }else{
-            //좋아요 취소
-            feedLikeRepository.delete(feedLike);
-            feed.countlike(feed.getLikeCount() - 1);
-            log.info("멤버 {}가 좋아요 취소 ->{}", member.getEmail(),feed.getLikeCount());
-            return false;
+            return upLike(feed,member);
         }
+        //좋아요 취소
+        log.info("멤버 {}가 좋아요 취소 ->{}", member.getEmail(),feed.getLikeCount());
+        return cancelLIke(feedLike,feed);
     }
 
-//    public boolean checkIfLiked(Long feedId) {
-//        String currentEmail = SecurityUtil.getCurrentEmail().orElseThrow(EntityNotFoundException::new);
-//        Member member = memberRepository.findByEmail(currentEmail).orElseThrow(EntityNotFoundException::new);
-//
-//        Feed feed = feedRepository.findById(feedId).orElseThrow(EntityNotFoundException::new);
-//        FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(member,feed);
-//
-//        // feedLike가 null이 아니라면 좋아요 선택
-//        return feedLike != null;
-//
-//    }
+    private boolean upLike(Feed feed, Member member){
+
+        FeedLike feedLike = FeedLike.builder()
+                .member(member)
+                .feed(feed)
+                .build();
+        feedLikeRepository.save(feedLike);
+
+        //좋아요 수 증가
+        feed.countlike(feed.getLikeCount() + 1);
+        return true;
+    }
+
+    private boolean cancelLIke(FeedLike feedLike,Feed feed){
+        feedLikeRepository.delete(feedLike);
+        feed.countlike(feed.getLikeCount() - 1);
+        return false;
+    }
+
+
+
+
+
+
+
 }
