@@ -28,15 +28,16 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    private static final String[] WHITE_LIST_URL = {
+    private static final String[] SYSTEM_WHITE_LIST_URL = {
             "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
             "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui/**",
             "/webjars/**", "/swagger-ui.html", "/error"
     };
 
-    private static final String[] AUTH_LIST_URL = {
+    private static final String[] API_WHITE_LIST_URL = {
             "/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup", "/auth/cert-mail",
-            "/auth/cert-mail/confirm", "/auth/pwd", "/auth/cert-pnum", "/auth/cert-pnum/confirm"
+            "/auth/cert-mail/confirm", "/auth/pwd", "/auth/cert-pnum", "/auth/cert-pnum/confirm",
+            "/auth/email/check", "/files/**"
     };
 
     @Bean
@@ -54,8 +55,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
-                                .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .requestMatchers(AUTH_LIST_URL).permitAll()
+                                .requestMatchers(SYSTEM_WHITE_LIST_URL).permitAll()
+                                .requestMatchers(API_WHITE_LIST_URL).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->

@@ -2,15 +2,19 @@ package com.withus.be.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.withus.be.common.exception.InvalidParameterException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -22,6 +26,15 @@ public class S3Util {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public String uploadProfileImage(MultipartFile multipartFile) throws IOException {
+        String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+
+        if (!Objects.requireNonNull(extension).matches("(?i)png|jpg|jpeg|webp"))
+            throw new InvalidParameterException("지원되지 않는 확장자입니다.");
+
+        return uploadFile(multipartFile);
+    }
 
     public String uploadFile(MultipartFile multipartFile) throws IOException {
         String s3FileName = getS3FileName(multipartFile);

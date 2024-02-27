@@ -77,4 +77,8 @@ public class AuthService {
         );
     }
 
+    public boolean emailDuplicateCheck(String email) {
+        if (memberRepository.findByEmail(email).isEmpty()) return true;
+        throw new DuplicatedException("중복된 이메일입니다.");
+    }
 }

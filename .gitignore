@@ -38,3 +38,7 @@ out/
 
 .env
 application-*.yml
+
+/gradle/
+/gradlew.bat
+/gradlew

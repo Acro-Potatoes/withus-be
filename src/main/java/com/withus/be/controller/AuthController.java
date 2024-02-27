@@ -2,7 +2,9 @@ package com.withus.be.controller;
 
 import com.withus.be.common.auth.jwt.JwtTokenProvider;
 import com.withus.be.common.response.Response.Body;
+import com.withus.be.common.response.ResponseFail;
 import com.withus.be.common.response.ResponseSuccess;
+import com.withus.be.common.response.Result;
 import com.withus.be.dto.EmailDto;
 import com.withus.be.dto.LoginDto;
 import com.withus.be.dto.MemberDto;
@@ -89,6 +91,12 @@ public class AuthController {
     @PostMapping("/cert-pnum/confirm")
     public ResponseEntity<Body> confirmCertPhoneNum(@Valid @RequestBody PhoneNumCertRequest request) {
         return new ResponseSuccess().success(authService.confirmCertNum(request.getPhoneNum(), request.getCertNum()));
+    }
+
+    @Operation(summary = "이메일 중복 확인 API")
+    @PostMapping("/email/check")
+    public ResponseEntity<Body> emailDuplicateCheck(@RequestParam(value = "email") String email) {
+        return new ResponseSuccess("회원 가입이 가능합니다.").success(authService.emailDuplicateCheck(email));
     }
 
     private ResponseEntity<Body> getTokenRes(TokenDto token) {
