@@ -7,6 +7,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ChatDto {
+    private String sender;
+    private String roomId;
     private String message;
+    private String createdDate;
 }
