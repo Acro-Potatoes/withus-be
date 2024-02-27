@@ -61,7 +61,7 @@ public class MailService {
 
         String msg = getMailBody();
         message.setText(msg, "utf-8", "html");
-        message.setFrom(new InternetAddress(sender, "with-us"));
+        message.setFrom(new InternetAddress(sender, "no-reply"));
     }
 
     private String getMailBody() {

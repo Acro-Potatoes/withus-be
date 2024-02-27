@@ -31,7 +31,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	implementation 'com.google.collections:google-collections:1.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.4'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.4'
 
 	// aws s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
@@ -50,6 +51,12 @@ dependencies {
 	// Configuration file encryption
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+
+	// apache kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.apache.kafka:kafka-clients:3.5.1'
+	implementation 'org.apache.kafka:kafka-streams:3.5.1'
+	implementation 'org.apache.kafka:kafka_2.13:3.5.1'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
