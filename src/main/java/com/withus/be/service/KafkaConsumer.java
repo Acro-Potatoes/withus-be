@@ -22,6 +22,8 @@ public class KafkaConsumer {
         ChatDto payload = consumerRecord.value();
         log.info("[Consumer] received payload : {}", payload);
 
+        // TODO : 일단 name 으로 필터링 하는데 향후 다시 한 번 정립 필요
+        if (payload.getSender().equals(payload.getCurrentName())) return;
         sendNotification(payload.getSender(), payload.getMessage());
     }
 
