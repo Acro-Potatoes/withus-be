@@ -37,7 +37,7 @@ public class SecurityConfig {
     private static final String[] API_WHITE_LIST_URL = {
             "/auth/login", "/oauth/google", "/oauth/google/**", "/auth/signup", "/auth/cert-mail",
             "/auth/cert-mail/confirm", "/auth/pwd", "/auth/cert-pnum", "/auth/cert-pnum/confirm",
-            "/auth/email/check", "/files/**"
+            "/auth/email/check", "/files/**", "/chat"
     };
 
     @Bean
